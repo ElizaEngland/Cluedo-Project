@@ -1,28 +1,23 @@
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.List;
 
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.Color;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.text.DefaultCaret;
 import javax.swing.JPasswordField;
-import javax.swing.BoxLayout;
+
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
-public class GraphicalInterface extends JFrame implements WindowListener, MouseListener {
+
+public class GraphicalInterface extends JFrame{
     
     private JTextField playerName;
 	private JPasswordField password;
@@ -45,55 +40,118 @@ public class GraphicalInterface extends JFrame implements WindowListener, MouseL
         characters.add("WHITE");
         characters.add("PEACOCK");
         characters.add("MUSTARD");
-    }
+
+
+		JPanel panel = new JPanel(new FlowLayout());
+		panel.setBackground(Color.lightGray);
+		panel.setLayout(new GridBagLayout());
+		JLabel sugg = new JLabel("Make A Suggestion");
+		JLabel persontxt = new JLabel("Person: ");
+		JTextField person = new JTextField(30);
+		JLabel weapontxt = new JLabel("Weapon: ");
+		JTextField weapon = new JTextField(30);
+		JLabel roomtxt = new JLabel("Room: ");
+		JTextField room = new JTextField(30);
+
+        panel.add(sugg);
+		panel.add(persontxt);
+		panel.add(person);
+		panel.add(weapontxt);
+		panel.add(weapon);
+		panel.add(roomtxt);
+		panel.add(room);
+		add(panel);
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(500, 500);
+		setVisible(true);
+	}
+
+	public void mainMenu(){
+		JPanel panel = new JPanel();
+
+		JLabel intro = new JLabel("Welcome to Cluedo!");
+		panel.add(intro);
+		JButton newGame = new JButton("New Game");
+		JButton exit = new JButton("Exit");
+		panel.add(newGame);
+		panel.add(exit);
+		add(panel);
+
+		newGame.addActionListener( new ActionListener() {
+		   public void actionPerformed(ActionEvent e)
+		   {
+			   howMany();
+		   }
+	   }
+		);
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(350, 200);
+		setVisible(true);
+	}
     
     public void addPlayer() {
+    	JFrame frame2 = new JFrame();
+    	JPanel panel = new JPanel();
 		JLabel player = new JLabel("Player name: "); 
 		playerName = new JTextField(30);
 		JLabel tokenName = new JLabel("Choose a token: ");
-		add(player);
-		add(playerName);
-		add(tokenName);
+		panel.add(player);
+		panel.add(playerName);
+		panel.add(tokenName);
 		for(int i = 0; i < characters.size(); i++) {
 			token = new JRadioButton();
 			token.setText(characters.get(i)); 
-			add(token);
+			panel.add(token);
 		}
 		JButton confirm = new JButton("Confirm player");
-		add(confirm);	
+		panel.add(confirm);
+		frame2.add(panel);
+
+
+		confirm.addActionListener( new ActionListener() {
+		  public void actionPerformed(ActionEvent e)
+		  {
+			  addPlayer();
+		  }
+	  	}
+		);
+
+		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame2.setSize(500, 500);
+		frame2.setVisible(true);
+
 	}
 	public void howMany() {
+    	JFrame frame1 = new JFrame();
 		JPanel panel = new JPanel();
-		this.setPreferredSize(new Dimension(100, 50));
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.setVisible(true);
+
 		JLabel noOfPlayers = new JLabel("How many players: ");
 		JTextField players = new JTextField(10);
-		panel.add(noOfPlayers);	
+		panel.add(noOfPlayers);
 		panel.add(players);
 		JButton confirmNoOfPlayers = new JButton("Confirm");
 		panel.add(confirmNoOfPlayers);
-		add(panel);			
+		frame1.add(panel);
+
+		confirmNoOfPlayers.addActionListener( new ActionListener() {
+		   public void actionPerformed(ActionEvent e)
+		   {
+			   addPlayer();
+		   }
+	   	}
+		);
+
+		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame1.setSize(500, 200);
+		frame1.setVisible(true);
+
+
 	}
-	
-	
-	
-}
 
 
-import javax.swing.JOptionPane;
-import javax.swing.JFrame;
 
-public class tester {
 	
-	public static void main(String[] arg) {
-		
-		GraphicalInterface yeee = new GraphicalInterface();
-		
-		yeee.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		yeee.setSize(500, 500);
-		yeee.setVisible(true);
 	
-		
-	}
 }
