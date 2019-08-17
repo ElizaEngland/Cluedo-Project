@@ -28,6 +28,10 @@ public class GraphicalInterface extends JFrame{
 	private int BOARDWIDTH = 1000;
 	private ImageIcon img = new ImageIcon("images/Hall.jpg");
 
+	private int addPlayerCounter;
+	private int playerAmount;
+
+
 	// JFram
 	static JFrame f;
 
@@ -37,9 +41,11 @@ public class GraphicalInterface extends JFrame{
 	// label to diaplay text
 	static JLabel l;
 	private ArrayList<String> characters;
+	public cluedoMain mainCluedo;
     
     public GraphicalInterface(){
         super("Cluedo");
+
 		setLayout(new FlowLayout());
 		characters = new ArrayList<String>();
 		characters.add("SCARLETT");
@@ -48,8 +54,9 @@ public class GraphicalInterface extends JFrame{
         characters.add("WHITE");
         characters.add("PEACOCK");
         characters.add("MUSTARD");
-
+		mainCluedo = new cluedoMain(); // edited
      	mainFrame();
+
 
 	}
 
@@ -180,6 +187,14 @@ public class GraphicalInterface extends JFrame{
 		mainFrame.getContentPane().add( p2, "South");
 		mainFrame.getContentPane().add(p3,"Center");
 
+		// ask amount of players if new game button is pressed
+		m1.addActionListener( new ActionListener() {
+		   public void actionPerformed(ActionEvent e)
+		   {
+			   howMany();
+		   }
+		});
+
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setSize(BOARDWIDTH, BOARDHEIGHT);
 		mainFrame.setVisible(true);
@@ -218,9 +233,13 @@ public class GraphicalInterface extends JFrame{
 	}
     
     public void addPlayer() {
+		System.out.println("Current size: " + mainCluedo.players.size());
+
+
     	JFrame frame2 = new JFrame();
     	JPanel panel = new JPanel();
 
+    	// loop for inputting
 		JLabel player = new JLabel("Player name: ");
 		JLabel tokenName = new JLabel("Choose a token: ");
 
@@ -238,11 +257,19 @@ public class GraphicalInterface extends JFrame{
 		panel.add(confirm);
 		frame2.add(panel);
 
-
 		confirm.addActionListener( new ActionListener() {
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  addPlayer();
+			  addPlayerCounter+=1;
+			  mainCluedo.addPlayerGUI(playerName.getText(), tokenName.getText(), 0,0,null,null,null,null );
+
+			  if (mainCluedo.players.size() < playerAmount) {
+				  frame2.setVisible(false);
+				  addPlayer();
+			}
+		  	else{
+				frame2.setVisible(false);
+			}
 		  }
 	  	}
 		);
@@ -266,10 +293,15 @@ public class GraphicalInterface extends JFrame{
 		panel.add(confirmNoOfPlayers);
 		frame1.add(panel);
 
+
 		confirmNoOfPlayers.addActionListener( new ActionListener() {
 		   public void actionPerformed(ActionEvent e)
 		   {
+			   String stringNumOfPlayers = players.getText();
+			   playerAmount = Integer.parseInt(stringNumOfPlayers);
+//			   System.out.println("Num of players: " + intNumOfPlayers);
 			   addPlayer();
+
 		   }
 	   	}
 		);
@@ -277,6 +309,7 @@ public class GraphicalInterface extends JFrame{
 		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame1.setSize(500, 200);
 		frame1.setVisible(true);
+//
 
 	}
 
