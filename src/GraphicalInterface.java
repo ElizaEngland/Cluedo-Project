@@ -253,6 +253,7 @@ public class GraphicalInterface extends JFrame{
 			token.setText(characters.get(i)); 
 			panel.add(token);
 		}
+
 		JButton confirm = new JButton("Confirm player");
 		panel.add(confirm);
 		frame2.add(panel);
