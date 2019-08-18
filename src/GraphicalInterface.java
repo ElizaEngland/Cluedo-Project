@@ -1,4 +1,3 @@
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -55,134 +54,78 @@ public class GraphicalInterface extends JFrame{
 
 
 	public void mainFrame(){
-
-		Border blackline = BorderFactory.createLineBorder(Color.black);
+        Border blackline = BorderFactory.createLineBorder(Color.black);
     	JFrame mainFrame = new JFrame();
+
+    	//menu
     	JMenuBar menuBar = new JMenuBar();
 		JMenu menu  = new JMenu("File");
-
 		JMenuItem m1 = new JMenuItem("New Game");
 		JMenuItem m2 = new JMenuItem("Exit");
-
 		menu.add(m1);
 		menu.add(m2);
 		menuBar.add(menu);
 		mainFrame.setJMenuBar(menuBar);
 
-
 		// column
 		JPanel p1 = new JPanel();
 		p1.setLayout( new BoxLayout(p1, BoxLayout.Y_AXIS));
 		p1.setBorder(blackline);
-		//p1.setBackground(Color.blue);
 		p1.setPreferredSize(new Dimension(BOARDWIDTH/5, BOARDHEIGHT));
 
+		//buttons
 		JButton roll = new JButton("ROLL");
 		roll.setAlignmentX(Component.CENTER_ALIGNMENT);
 		JButton suggestion = new JButton("SUGGESTION");
 		suggestion.setAlignmentX(Component.CENTER_ALIGNMENT);
+		suggestion.addActionListener( new ActionListener() {
+		   public void actionPerformed(ActionEvent e)
+		   {
+			   makeSuggestion();
+		   }
+	   	}
+		);
 		JButton accusation = new JButton("ACCUSTATION");
 		accusation.setAlignmentX(Component.CENTER_ALIGNMENT);
 		p1.add(roll);
 		p1.add(suggestion);
 		p1.add(accusation);
 
+
 		// bottom
 		JPanel p2= new JPanel();
 		p2.setLayout( new BorderLayout());
 		p2.setBorder(blackline);
-		//p2.setBackground(Color.RED);
 		p2.setPreferredSize(new Dimension(BOARDWIDTH, BOARDHEIGHT/5));
 
 		JPanel p2a = new JPanel();
 		p2a.setLayout( new FlowLayout());
 		p2a.setBorder(blackline);
-		//p2a.setBackground(Color.green);
 		p2a.setPreferredSize(new Dimension(700, BOARDHEIGHT/10));
 		p2.add( p2a, "East");
 
 		JPanel p2b = new JPanel();
 		p2b.setLayout( new FlowLayout());
 		p2b.setBorder(blackline);
-		//p2b.setBackground(Color.ORANGE);
 		p2b.setPreferredSize(new Dimension(BOARDWIDTH/2, BOARDHEIGHT/10));
-
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(new File("images/scarlett.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
+		for(String name : images){ // draws the hand
+			ImageIcon i = drawHand(name);
+			p2a.add(new JLabel(i));
 		}
-		Image dimg = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
-		ImageIcon imageIcon = new ImageIcon(dimg);
-		p2a.add(new JLabel(imageIcon));
-
-		BufferedImage chimg = null;
-		try {
-			chimg = ImageIO.read(new File("images/plum.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Image cimg = chimg.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
-		ImageIcon imagIcon = new ImageIcon(cimg);
-		p2a.add(new JLabel(imagIcon));
-
-		BufferedImage thimg = null;
-		try {
-			thimg = ImageIO.read(new File("images/rope.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Image timg = thimg.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
-		ImageIcon imagtIcon = new ImageIcon(timg);
-		p2a.add(new JLabel(imagtIcon));
-
-		BufferedImage whimg = null;
-		try {
-			whimg = ImageIO.read(new File("images/kitchen.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Image wimg = whimg.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
-		ImageIcon imagwIcon = new ImageIcon(wimg);
-		p2a.add(new JLabel(imagwIcon));
-
-		BufferedImage zhimg = null;
-		try {
-			zhimg = ImageIO.read(new File("images/lounge.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Image zimg = zhimg.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
-		ImageIcon imagzIcon = new ImageIcon(zimg);
-		p2a.add(new JLabel(imagzIcon));
-
-		BufferedImage lhimg = null;
-		try {
-			lhimg = ImageIO.read(new File("images/candlestick.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Image limg = lhimg.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
-		ImageIcon imaglIcon = new ImageIcon(limg);
-		p2a.add(new JLabel(imaglIcon));
-
-
-
 		p2.add( p2b, "West");
 
-
 		// graph
-		JPanel p3 = new JPanel();
-		p3.setBorder(blackline);
+		JPanel p3 = drawBoard();
+
+		//add(p3);
 
 		mainFrame.getContentPane().add( p1, "West");
 		mainFrame.getContentPane().add( p2, "South");
 		mainFrame.getContentPane().add(p3,"Center");
-
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setSize(BOARDWIDTH, BOARDHEIGHT);
 		mainFrame.setVisible(true);
+	
 
 	}
 	public void mainMenu(){
@@ -309,6 +252,103 @@ public class GraphicalInterface extends JFrame{
 		f.add(p);
 		f.setSize(400, 250);
 		f.setVisible(true);
+	}
+	
+		public ImageIcon drawHand(String imgName){
+		BufferedImage lhimg = null;
+		try {
+			lhimg = ImageIO.read(new File("images/" +imgName +""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Image limg = lhimg.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
+		ImageIcon imaglIcon = new ImageIcon(limg);
+
+
+		return imaglIcon;
+	}
+	
+	public ImageIcon resize(String imgName){
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File("images/" +imgName +""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Image imgs = img.getScaledInstance(31,28, Image.SCALE_SMOOTH);
+		ImageIcon imageIcon = new ImageIcon(imgs);
+		return imageIcon;
+	}
+	
+	
+	public JPanel drawBoard(){
+		JPanel p3 = new JPanel();
+		ImageIcon[][] grid;
+
+		addTile();
+
+		//p3.setBorder(blackline);
+		int width = 25;
+		int height = 26;
+		p3.setLayout(new GridLayout(width,height));
+
+		grid=new ImageIcon[width][height]; //allocate the size of grid
+		for(Tile tile : tiles){
+			grid[tile.getX()][tile.getY()] = tile.getImage();
+			p3.add(new JLabel(grid[tile.getX()][tile.getY()])); //adds button to grid
+
+		}
+		return p3;
+	}
+	
+
+
+	public void addTile(){
+		try {
+			FileReader fr = new FileReader("boardmapGUI.txt");
+			BufferedReader dataReader = new BufferedReader(fr);
+
+			String currentLine;
+			while ((currentLine = dataReader.readLine()) != null) {
+				String[] loadArray = currentLine.split(","); // splits the lines by the comma into an array for each line
+
+				if (loadArray.length > 2) {
+					String value = loadArray[0];
+					if (value == null) {
+						break;
+					}
+					int col = Integer.parseInt(loadArray[1]); // col position
+					int row = Integer.parseInt(loadArray[2]); // row position
+
+
+					if(value.equals("x")){ // if a room
+						ImageIcon r = resize("outOfBoundsTile.jpg");
+						Tile newTile = new Tile(r,false,false,false,true,row,col);
+						tiles.add(newTile);
+					}
+					else if(value.equals("h")) {
+                        ImageIcon r = resize("hallwayTile.jpg");
+                        Tile newTile = new Tile(r, false, false, false, true, row, col);
+                        tiles.add(newTile);
+                    }
+					else if(value.equals("D")){
+						ImageIcon r = resize("doorTile.jpg");
+						Tile newTile = new Tile(r,false,false,true,false,row,col);
+						tiles.add(newTile);
+					}
+					else{
+						ImageIcon r = resize("roomTile.jpg");
+						Tile newTile = new Tile(r,true,false,false,false, row,col);
+						tiles.add(newTile);
+					}
+
+				}
+			}
+
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+
 	}
 	
 }
