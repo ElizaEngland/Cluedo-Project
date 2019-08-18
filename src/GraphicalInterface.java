@@ -1,9 +1,12 @@
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -16,6 +19,7 @@ import java.awt.BorderLayout;
 import javax.swing.border.Border;
 
 import javax.swing.ImageIcon;
+import java.util.Scanner;
 
 public class GraphicalInterface extends JFrame{
     
@@ -25,9 +29,10 @@ public class GraphicalInterface extends JFrame{
 	private JRadioButton token;
 	private int BOARDHEIGHT = 1000;
 	private int BOARDWIDTH = 1000;
-	private ImageIcon img = new ImageIcon("images/Hall.jpg");
+	private ArrayList<String> images = new ArrayList<String>();
+	private ArrayList<Tile> tiles = new ArrayList<Tile>();
 
-	// JFram
+	// JFrame
 	static JFrame f;
 
 	// JButton
@@ -48,7 +53,13 @@ public class GraphicalInterface extends JFrame{
         characters.add("PEACOCK");
         characters.add("MUSTARD");
 
-     	mainFrame();
+        images.add("dining.jpg");
+		images.add("dagger.jpg");
+		images.add("pipe.jpg");
+		images.add("white.jpg");
+		images.add("rope.jpg");
+		images.add("conservatory.jpg");
+		mainFrame();
 
 	}
 
@@ -254,7 +265,7 @@ public class GraphicalInterface extends JFrame{
 		f.setVisible(true);
 	}
 	
-		public ImageIcon drawHand(String imgName){
+	public ImageIcon drawHand(String imgName){
 		BufferedImage lhimg = null;
 		try {
 			lhimg = ImageIO.read(new File("images/" +imgName +""));
