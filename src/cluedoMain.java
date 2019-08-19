@@ -35,9 +35,9 @@ class cluedoMain {
     public cluedoMain() {
         this.noOfPlayers = 0;
         players = new ArrayList<Player>();
-        gui = new GraphicalInterface(this);
         this.currentboard = new Board();
-        newGame();
+        gui = new GraphicalInterface(this);
+        //newGame();
     }
 
     public static void main(String[] args) {
@@ -51,14 +51,16 @@ class cluedoMain {
     public void newGame() {
         Scanner sc = new Scanner(System.in);
         currentboard.fillBoard();
-       // currentboard.printBoard();
+       //currentboard.printBoard();
         generateCards();
         chooseWinning();
         addCharactersToList();
-        gui.howMany(sc);
-
         shuffle();
         deal();
+
+        Player player = players.get(0);
+        //gui.mainFrame(player);
+
         playGame(sc);
 
        // addPlayers(sc);
@@ -69,14 +71,15 @@ class cluedoMain {
         //sc.close();
     }
 
-
     /**
      * Starts a new game
      *
      * @param reader scanner to read user input
      */
     public void playGame(Scanner reader) {
+
         for (Player player : players) {
+            System.out.println("row:" +player.row + " col:" + player.col +" letter: " + player.characterLetter);
             currentboard.placeOnBoard(player.row, player.col, player.characterLetter);
             // add the player to all of the players list
             allPlayers.add(player);
@@ -99,9 +102,8 @@ class cluedoMain {
             currentboard.printBoard();
             // for all of the players
             for (int i = 0; i < players.size(); i++) {
-               
                 Player player = players.get(i);
-                 gui.mainFrame(player);
+
                 int no = player.turn(reader, currentboard, player, players, allPlayers);
                 if (no == 1) {
                     gameOver = true;
@@ -168,6 +170,7 @@ class cluedoMain {
     public void addPlayerGUI(String name, String character, int row, int col, HashSet<Card> personCards, HashSet<Card> weaponCards, HashSet<Card> roomCards, List<Card> winningCards)  {
         Player p = new Player(name, character,  row,  col,  personCards, weaponCards,  roomCards, winningCards);
         players.add(p);
+        allPlayers.add(p);
         System.out.println("Added2: " + character);
 //        System.out.println("Players: " + players);
     }
