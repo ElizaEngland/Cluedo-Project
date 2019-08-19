@@ -1,6 +1,7 @@
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.util.Enumeration;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,6 +15,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
+import java.util.HashSet;
 import javax.swing.border.Border;
 
 import javax.swing.ImageIcon;
@@ -24,6 +26,8 @@ public class GraphicalInterface extends JFrame{
 	private JPasswordField password;
 	private JButton newGame;
 	private JRadioButton token;
+
+
 	private int BOARDHEIGHT = 1000;
 	private int BOARDWIDTH = 1000;
 	private ImageIcon img = new ImageIcon("images/Hall.jpg");
@@ -40,20 +44,44 @@ public class GraphicalInterface extends JFrame{
 
 	// label to diaplay text
 	static JLabel l;
-	private ArrayList<String> characters;
+//	private ArrayList<String> characters;
+	private HashSet<String> characters;
+	private ButtonGroup buttonGroup = new ButtonGroup();
+	private ArrayList<JRadioButton> charButtons;
+
 	public cluedoMain mainCluedo;
     
     public GraphicalInterface(){
         super("Cluedo");
 
 		setLayout(new FlowLayout());
-		characters = new ArrayList<String>();
+//		characters = new ArrayList<String>();
+		characters = new HashSet<>();
+		charButtons = new ArrayList<>();
+
+
+
 		characters.add("SCARLETT");
         characters.add("PLUM");
         characters.add("GREEN");
         characters.add("WHITE");
         characters.add("PEACOCK");
         characters.add("MUSTARD");
+        // create new JButton
+		JRadioButton scarlett = new JRadioButton("Scarlett");
+		JRadioButton green = new JRadioButton("Green");
+		JRadioButton white = new JRadioButton("White");
+		JRadioButton peacock = new JRadioButton("Peacock");
+		JRadioButton mustard = new JRadioButton("Mustard");
+		JRadioButton plum = new JRadioButton("Plum");
+		// add buttons
+		buttonGroup.add(scarlett);
+		buttonGroup.add(green);
+		buttonGroup.add(white);
+		buttonGroup.add(peacock);
+		buttonGroup.add(mustard);
+		buttonGroup.add(plum);
+
 		mainCluedo = new cluedoMain(); // edited
      	mainFrame();
 
@@ -248,21 +276,56 @@ public class GraphicalInterface extends JFrame{
 		panel.add(player);
 		panel.add(playerName);
 		panel.add(tokenName);
-		for(int i = 0; i < characters.size(); i++) {
-			token = new JRadioButton();
-			token.setText(characters.get(i)); 
-			panel.add(token);
-		}
+		String selectedName = "";
+//		final String fstring = "";
 
+		// adds all of the buttons onto the panel
+		Enumeration elements = buttonGroup.getElements();
+		while(elements.hasMoreElements()){
+			JRadioButton button = (JRadioButton)elements.nextElement();
+			panel.add(button);
+		}
+//		for (JRadioButton charB : charButtons) {
+//
+//		}
+//
+//		for (JRadioButton charB : charButtons) {
+//			if (charB.isSelected()){
+//				selectedName = charB.getText();
+//				System.out.println("selected: " + charB.getText());
+//			}
+//		}
+//		charButtons.remove(selectedName);
+
+
+//		for(int i = 0; i < characters.size(); i++) {
+//			token = new JRadioButton();
+//			token.setText(characters.get(i));
+//			panel.add(token);
+//		}
+//		System.out.println();
 		JButton confirm = new JButton("Confirm player");
 		panel.add(confirm);
 		frame2.add(panel);
+//		System.out.println(selectedName);
+//		final String s = selectedName;
+//		System.out.println(s);
 
 		confirm.addActionListener( new ActionListener() {
 		  public void actionPerformed(ActionEvent e)
 		  {
+		  	String selectedName="";
+			  Enumeration elements = buttonGroup.getElements();
+		  	while(elements.hasMoreElements()){
+				JRadioButton button = (JRadioButton)elements.nextElement();
+				  if (button.isSelected()){
+					  selectedName = button.getText();
+					  System.out.println("selected: " + button.getText());
+				  }
+			  }
+		  	buttonGroup.clearSelection();
 			  addPlayerCounter+=1;
-			  mainCluedo.addPlayerGUI(playerName.getText(), tokenName.getText(), 0,0,null,null,null,null );
+			  mainCluedo.addPlayerGUI(playerName.getText(), selectedName, 0,0,null,null,null,null );
 
 			  if (mainCluedo.players.size() < playerAmount) {
 				  frame2.setVisible(false);
@@ -298,6 +361,8 @@ public class GraphicalInterface extends JFrame{
 		confirmNoOfPlayers.addActionListener( new ActionListener() {
 		   public void actionPerformed(ActionEvent e)
 		   {
+			   frame1.setVisible(false);
+
 			   String stringNumOfPlayers = players.getText();
 			   playerAmount = Integer.parseInt(stringNumOfPlayers);
 //			   System.out.println("Num of players: " + intNumOfPlayers);

@@ -160,7 +160,7 @@ class cluedoMain {
     public void addPlayerGUI(String name, String character, int row, int col, HashSet<Card> personCards, HashSet<Card> weaponCards, HashSet<Card> roomCards, List<Card> winningCards)  {
         Player p = new Player(name, character,  row,  col,  personCards, weaponCards,  roomCards, winningCards);
         players.add(p);
-        System.out.println("Added: " + character);
+        System.out.println("Added2: " + character);
 //        System.out.println("Players: " + players);
     }
 
