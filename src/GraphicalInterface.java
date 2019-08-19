@@ -41,7 +41,6 @@ public class GraphicalInterface extends JFrame implements KeyListener {
     private ArrayList<String> characters;
     private ButtonGroup buttonGroup = new ButtonGroup();
     private ArrayList<JRadioButton> charButtons;
-    private Player player;
     public cluedoMain cluedoMainGame;
 
 
@@ -79,14 +78,14 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         buttonGroup.add(plum);
 
         this.cluedoMainGame = cluedoMainGame;
-        //mainFrame();
+        howMany();
         //howMany();
 
     }
 
 
     public void mainFrame(Player player){
-        this.player = player;
+
         Border blackline = BorderFactory.createLineBorder(Color.black);
         JFrame mainFrame = new JFrame();
         addKeyListener(this);
@@ -108,13 +107,13 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         p1.setPreferredSize(new Dimension(BOARDWIDTH/5, BOARDHEIGHT));
 
         //buttons
-        JLabel playerName = new JLabel("Elizas turn");
-        playerName.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //JLabel playerName = new JLabel(player.getName() + " turn");
+        //playerName.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JButton roll = new JButton("ROLL");
         roll.setAlignmentX(Component.CENTER_ALIGNMENT);
         roll.addActionListener( new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 roll();
             }
         }
@@ -131,7 +130,7 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         );
         JButton accusation = new JButton("ACCUSTATION");
         accusation.setAlignmentX(Component.CENTER_ALIGNMENT);
-        p1.add(playerName);
+        //p1.add(playerName);
         p1.add(roll);
         p1.add(suggestion);
         p1.add(accusation);
@@ -147,9 +146,9 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         p2a.setLayout( new FlowLayout());
         p2a.setBorder(blackline);
         p2a.setPreferredSize(new Dimension(700, BOARDHEIGHT/10));
-        for(Card c : player.handList){ // draws the hand
-            String name = c.getName().toLowerCase();
-            ImageIcon i = drawHand(name + ".jpg");
+        for(Card card : player.handList){ // draws the hand
+            String name = card.getName().toLowerCase() + ".jpg";
+            ImageIcon i = drawHand(name);
             p2a.add(new JLabel(i));
         }
         p2.add( p2a, "East");
@@ -160,8 +159,8 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         p2b.setBorder(blackline);
         p2b.setPreferredSize(new Dimension(BOARDWIDTH/2, BOARDHEIGHT/10));
         p2b.add(new JLabel(diceOne));
-
         p2b.add(new JLabel(diceTwo));
+
         p2.add( p2b, "West");
 
         // graph
@@ -208,7 +207,7 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         f.setSize(350, 200);
         f.setVisible(true);
     }*/
-    public void addPlayer(Scanner sc) {
+    public void addPlayer() {
         System.out.println("Current size: " + cluedoMainGame.players.size());
 
         JFrame frame2 = new JFrame();
@@ -250,6 +249,7 @@ public class GraphicalInterface extends JFrame implements KeyListener {
                        System.out.println(selectedName);
                        a = button;
                        System.out.println("selected: " + button.getText());
+
                    }
                }
                buttonGroup.remove(a);
@@ -259,18 +259,11 @@ public class GraphicalInterface extends JFrame implements KeyListener {
 
                if (cluedoMainGame.players.size() < playerAmount) {
                    frame2.setVisible(false);
-                   System.out.println("adding");
-
-                   addPlayer(sc);
+                   addPlayer();
                }
                else{
-                   System.out.println("shuffle");
-
-                   cluedoMainGame.shuffle();
-                   cluedoMainGame.deal();
-                   System.out.println("DONG");
                    frame2.setVisible(false);
-
+                   cluedoMainGame.newGame();
                }
            }
        }
@@ -282,7 +275,7 @@ public class GraphicalInterface extends JFrame implements KeyListener {
     }
 
 
-    public void howMany(Scanner sc) {
+    public void howMany() {
         JFrame frame1 = new JFrame();
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -296,20 +289,17 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         panel.add(confirmNoOfPlayers);
         frame1.add(panel);
 
-        final boolean r;
+
         confirmNoOfPlayers.addActionListener( new ActionListener() {
               public void actionPerformed(ActionEvent e)
               {
                   frame1.setVisible(false);
                   String stringNumOfPlayers = players.getText();
                   playerAmount = Integer.parseInt(stringNumOfPlayers);
-//                  r = true;
-//                  addPlayer(sc);
-
+                  addPlayer();
               }
           }
         );
-
 
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame1.setSize(500, 200);
