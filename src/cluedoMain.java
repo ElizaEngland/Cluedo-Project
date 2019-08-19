@@ -30,17 +30,19 @@ class cluedoMain {
     List<Card> cardsToDeal = new ArrayList<>();
     boolean gameOver = false;
     Board currentboard;
+    GraphicalInterface gui;
 
     public cluedoMain() {
         this.noOfPlayers = 0;
         players = new ArrayList<Player>();
-//        this.currentboard = new Board();
-//        newGame();
+        gui = new GraphicalInterface(this);
+        this.currentboard = new Board();
+        newGame();
     }
 
     public static void main(String[] args) {
-        cluedoMain cluedoMainGame = new cluedoMain();
-        GraphicalInterface gui = new GraphicalInterface(cluedoMainGame);
+        cluedoMain m = new cluedoMain();
+
     }
 
     /**
@@ -49,18 +51,24 @@ class cluedoMain {
     public void newGame() {
         Scanner sc = new Scanner(System.in);
         currentboard.fillBoard();
-        currentboard.printBoard();
+       // currentboard.printBoard();
         generateCards();
         chooseWinning();
         addCharactersToList();
-        addPlayers(sc);
-        //autoPlayers();
+        gui.howMany(sc);
 
         shuffle();
         deal();
         playGame(sc);
-        sc.close();
+
+       // addPlayers(sc);
+        //autoPlayers();
+       // shuffle();
+        //deal();
+        //playGame(sc);
+        //sc.close();
     }
+
 
     /**
      * Starts a new game
@@ -91,8 +99,9 @@ class cluedoMain {
             currentboard.printBoard();
             // for all of the players
             for (int i = 0; i < players.size(); i++) {
-
+               
                 Player player = players.get(i);
+                 gui.mainFrame(player);
                 int no = player.turn(reader, currentboard, player, players, allPlayers);
                 if (no == 1) {
                     gameOver = true;
