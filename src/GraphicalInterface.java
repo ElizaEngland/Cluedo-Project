@@ -40,11 +40,12 @@ public class GraphicalInterface extends JFrame{
     private ButtonGroup buttonGroup = new ButtonGroup();
     private ArrayList<JRadioButton> charButtons;
 
-    public cluedoMain mainCluedo;
+    public cluedoMain cluedoMainGame;
 
     
     public GraphicalInterface(cluedoMain cluedoMainGame){
         super("Cluedo");
+        this.cluedoMainGame = cluedoMainGame;
 		setLayout(new FlowLayout());
 		characters = new ArrayList<String>();
 		characters.add("SCARLETT");
@@ -204,7 +205,7 @@ public class GraphicalInterface extends JFrame{
 		f.setVisible(true);
 	}
     public void addPlayer() {
-        System.out.println("Current size: " + mainCluedo.players.size());
+//        System.out.println("Current size: " + mainCluedo.players.size());
 
         JFrame frame2 = new JFrame();
         JPanel panel = new JPanel();
@@ -250,9 +251,9 @@ public class GraphicalInterface extends JFrame{
                    buttonGroup.remove(a);
                    buttonGroup.clearSelection();
                    addPlayerCounter+=1;
-                   mainCluedo.addPlayerGUI(playerName.getText(), selectedName, 0,0,null,null,null,null );
+                   cluedoMainGame.addPlayerGUI(playerName.getText(), selectedName, 0,0,null,null,null,null );
 
-                   if (mainCluedo.players.size() < playerAmount) {
+                   if (cluedoMainGame.players.size() < playerAmount) {
                        frame2.setVisible(false);
                        addPlayer();
                    }
@@ -308,30 +309,33 @@ public class GraphicalInterface extends JFrame{
     public void makeSuggestion(){
 
 		JFrame f = new JFrame("panel");
-		JPanel p = new JPanel();
-		p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+		JPanel suggestionPanel = new JPanel();
+        suggestionPanel.setLayout(new BoxLayout(suggestionPanel, BoxLayout.Y_AXIS));
 
-		JTextField b1 = new JTextField(30); // person
-		JTextField b2 = new JTextField(30); // weapon
-		JTextField b3 = new JTextField(30); // room
+		JTextField personField = new JTextField(30); // person
+		JTextField weaponField = new JTextField(30); // weapon
+		JTextField roomField = new JTextField(30); // room
 
-		JLabel l = new JLabel("Make A Suggestion");
-		l.setFont(new Font("Serif", Font.PLAIN, 30));
+		JLabel suggestionlabel = new JLabel("Make A Suggestion");
+        suggestionlabel.setFont(new Font("Serif", Font.PLAIN, 30));
 		JLabel persontxt = new JLabel("Person: ");
 		persontxt.setFont(new Font("Serif", Font.PLAIN, 24));
 		JLabel weapontxt = new JLabel("Weapon: ");
 		weapontxt.setFont(new Font("Serif", Font.PLAIN, 24));
 		JLabel roomtxt = new JLabel("Room: ");
 		roomtxt.setFont(new Font("Serif", Font.PLAIN, 24));
+        JButton confirmSuggestion = new JButton("Confirm");
 
-		p.add(l);
-		p.add(persontxt);
-		p.add(b1);
-		p.add(weapontxt);
-		p.add(b2);
-		p.add(roomtxt);
-		p.add(b3);
-		f.add(p);
+        suggestionPanel.add(suggestionlabel);
+        suggestionPanel.add(persontxt);
+        suggestionPanel.add(personField);
+        suggestionPanel.add(weapontxt);
+        suggestionPanel.add(weaponField);
+        suggestionPanel.add(roomtxt);
+        suggestionPanel.add(roomField);
+        suggestionPanel.add(confirmSuggestion);
+
+        f.add(suggestionPanel);
 		f.setSize(400, 250);
 		f.setVisible(true);
 	}
