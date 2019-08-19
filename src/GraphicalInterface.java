@@ -250,7 +250,6 @@ public class GraphicalInterface extends JFrame implements KeyListener {
                        System.out.println(selectedName);
                        a = button;
                        System.out.println("selected: " + button.getText());
-
                    }
                }
                buttonGroup.remove(a);
@@ -260,10 +259,18 @@ public class GraphicalInterface extends JFrame implements KeyListener {
 
                if (cluedoMainGame.players.size() < playerAmount) {
                    frame2.setVisible(false);
+                   System.out.println("adding");
+
                    addPlayer(sc);
                }
                else{
+                   System.out.println("shuffle");
+
+                   cluedoMainGame.shuffle();
+                   cluedoMainGame.deal();
+                   System.out.println("DONG");
                    frame2.setVisible(false);
+
                }
            }
        }
@@ -289,14 +296,15 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         panel.add(confirmNoOfPlayers);
         frame1.add(panel);
 
-
+        final boolean r;
         confirmNoOfPlayers.addActionListener( new ActionListener() {
               public void actionPerformed(ActionEvent e)
               {
                   frame1.setVisible(false);
                   String stringNumOfPlayers = players.getText();
                   playerAmount = Integer.parseInt(stringNumOfPlayers);
-                  addPlayer(sc);
+//                  r = true;
+//                  addPlayer(sc);
 
               }
           }

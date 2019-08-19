@@ -31,6 +31,7 @@ class cluedoMain {
     boolean gameOver = false;
     Board currentboard;
     GraphicalInterface gui;
+    boolean continueGoing;
 
     public cluedoMain() {
         this.noOfPlayers = 0;
@@ -53,22 +54,41 @@ class cluedoMain {
         currentboard.fillBoard();
        // currentboard.printBoard();
         generateCards();
+        System.out.println("Generated cards");
+
         chooseWinning();
+        System.out.println("chose winning cards");
+
         addCharactersToList();
-        gui.howMany(sc);
+        System.out.println("addin characters cards");
 
-        shuffle();
-        deal();
-        playGame(sc);
 
-       // addPlayers(sc);
+         gui.howMany(sc);
+//         gui.addPlayer(sc);
+
+//        System.out.println(" cards");
+
+
+
         //autoPlayers();
        // shuffle();
         //deal();
         //playGame(sc);
         //sc.close();
     }
+    public void contGOING(Scanner sc){
+        shuffle();
+        System.out.println("shuffle cards");
 
+        deal();
+        System.out.println("deal cards");
+
+        playGame(sc);
+    }
+
+    public void setContinueGoing(boolean continueGoing) {
+        this.continueGoing = continueGoing;
+    }
 
     /**
      * Starts a new game

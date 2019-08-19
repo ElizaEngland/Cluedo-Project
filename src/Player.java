@@ -31,6 +31,10 @@ class Player {
     String previousTile;
     boolean onDoor;
     HashSet<String> pastCords;
+    boolean suggestionButtonClick;
+    boolean rollButtonClick;
+    boolean accusationnButtonClick;
+
 
     /**
      * Creates a player in the game
@@ -61,6 +65,7 @@ class Player {
         this.winningCards = winningCards;
     }
 
+
     /**
      * Adds a card to the players hand
      *
@@ -88,9 +93,15 @@ class Player {
         Boolean correctInput = false;
         String input;
         while (!correctInput) {
-            currentboard.printBoard();
+//            currentboard.printBoard();
             System.out.println("\n=== " + getName().toUpperCase() + " TURN ===");
             System.out.println("ROLL or SUGGESTION or ACCUSATION");
+            if (suggestionButtonClick==true){
+                suggestionButtonClick = false;
+//                this.suggestionTurn(persont, weapont, roomt);
+                boolean rollButtonClick;
+                boolean accusationnButtonClick;
+            }
             input = sc.next();
             if (input.equalsIgnoreCase("roll")) {
                 int x = diceRollingMoving(sc, currentboard, player, players, allPlayers);
