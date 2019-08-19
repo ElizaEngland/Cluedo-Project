@@ -34,14 +34,13 @@ class cluedoMain {
     public cluedoMain() {
         this.noOfPlayers = 0;
         players = new ArrayList<Player>();
-
 //        this.currentboard = new Board();
-
 //        newGame();
     }
 
     public static void main(String[] args) {
-        new cluedoMain();
+        cluedoMain cluedoMainGame = new cluedoMain();
+        GraphicalInterface gui = new GraphicalInterface(cluedoMainGame);
     }
 
     /**

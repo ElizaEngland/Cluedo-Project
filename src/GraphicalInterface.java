@@ -43,7 +43,7 @@ public class GraphicalInterface extends JFrame{
     public cluedoMain mainCluedo;
 
     
-    public GraphicalInterface(){
+    public GraphicalInterface(cluedoMain cluedoMainGame){
         super("Cluedo");
 		setLayout(new FlowLayout());
 		characters = new ArrayList<String>();
@@ -76,8 +76,8 @@ public class GraphicalInterface extends JFrame{
         buttonGroup.add(mustard);
         buttonGroup.add(plum);
 
-        mainCluedo = new cluedoMain(); // edited
-        //mainFrame();
+//        mainCluedo = new cluedoMain(); // edited
+        mainFrame();
         howMany();
     }
 
@@ -311,9 +311,9 @@ public class GraphicalInterface extends JFrame{
 		JPanel p = new JPanel();
 		p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 
-		JTextField b1 = new JTextField(30);
-		JTextField b2 = new JTextField(30);
-		JTextField b3 = new JTextField(30);
+		JTextField b1 = new JTextField(30); // person
+		JTextField b2 = new JTextField(30); // weapon
+		JTextField b3 = new JTextField(30); // room
 
 		JLabel l = new JLabel("Make A Suggestion");
 		l.setFont(new Font("Serif", Font.PLAIN, 30));
