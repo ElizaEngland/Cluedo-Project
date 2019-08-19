@@ -1,8 +1,10 @@
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.event.KeyListener;
+import java.security.Key;
 import java.util.Map;
-
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -22,14 +24,14 @@ import javax.swing.border.Border;
 
 import javax.swing.ImageIcon;
 
-public class GraphicalInterface extends JFrame{
-    
+public class GraphicalInterface extends JFrame implements KeyListener {
+
     private JTextField playerName;
-	private JRadioButton token;
-	private int BOARDHEIGHT = 1000;
-	private int BOARDWIDTH = 1000;
-	private ArrayList<String> images = new ArrayList<String>();
-	private ArrayList<Tile> tiles = new ArrayList<Tile>();
+    private JRadioButton token;
+    private int BOARDHEIGHT = 1000;
+    private int BOARDWIDTH = 1000;
+    private ArrayList<String> images = new ArrayList<String>();
+    private ArrayList<Tile> tiles = new ArrayList<Tile>();
     private Map<String, List<Integer>> startingPos = new HashMap<String,List<Integer>>();
 
     private ImageIcon diceOne;
@@ -39,16 +41,15 @@ public class GraphicalInterface extends JFrame{
     private ArrayList<String> characters;
     private ButtonGroup buttonGroup = new ButtonGroup();
     private ArrayList<JRadioButton> charButtons;
-
+    private Player player;
     public cluedoMain cluedoMainGame;
 
-    
+
     public GraphicalInterface(cluedoMain cluedoMainGame){
         super("Cluedo");
-        this.cluedoMainGame = cluedoMainGame;
-		setLayout(new FlowLayout());
-		characters = new ArrayList<String>();
-		characters.add("SCARLETT");
+        setLayout(new FlowLayout());
+        characters = new ArrayList<String>();
+        characters.add("SCARLETT");
         characters.add("PLUM");
         characters.add("GREEN");
         characters.add("WHITE");
@@ -56,11 +57,11 @@ public class GraphicalInterface extends JFrame{
         characters.add("MUSTARD");
 
         images.add("dining.jpg");
-		images.add("dagger.jpg");
-		images.add("pipe.jpg");
-		images.add("white.jpg");
-		images.add("rope.jpg");
-		images.add("conservatory.jpg");
+        images.add("dagger.jpg");
+        images.add("pipe.jpg");
+        images.add("white.jpg");
+        images.add("rope.jpg");
+        images.add("conservatory.jpg");
 
         // create new JButton
         JRadioButton scarlett = new JRadioButton("Scarlett");
@@ -77,135 +78,138 @@ public class GraphicalInterface extends JFrame{
         buttonGroup.add(mustard);
         buttonGroup.add(plum);
 
-//        mainCluedo = new cluedoMain(); // edited
-        mainFrame();
-        howMany();
+        this.cluedoMainGame = cluedoMainGame;
+        //mainFrame();
+        //howMany();
+
     }
 
 
-	public void mainFrame(){
+    public void mainFrame(Player player){
+        this.player = player;
+        Border blackline = BorderFactory.createLineBorder(Color.black);
+        JFrame mainFrame = new JFrame();
+        addKeyListener(this);
 
-		Border blackline = BorderFactory.createLineBorder(Color.black);
-    	JFrame mainFrame = new JFrame();
+        //menu
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu  = new JMenu("File");
+        JMenuItem m1 = new JMenuItem("New Game");
+        JMenuItem m2 = new JMenuItem("Exit");
+        menu.add(m1);
+        menu.add(m2);
+        menuBar.add(menu);
+        mainFrame.setJMenuBar(menuBar);
 
-    	//menu
-    	JMenuBar menuBar = new JMenuBar();
-		JMenu menu  = new JMenu("File");
-		JMenuItem m1 = new JMenuItem("New Game");
-		JMenuItem m2 = new JMenuItem("Exit");
-		menu.add(m1);
-		menu.add(m2);
-		menuBar.add(menu);
-		mainFrame.setJMenuBar(menuBar);
+        // column
+        JPanel p1 = new JPanel();
+        p1.setLayout( new BoxLayout(p1, BoxLayout.Y_AXIS));
+        p1.setBorder(blackline);
+        p1.setPreferredSize(new Dimension(BOARDWIDTH/5, BOARDHEIGHT));
 
-		// column
-		JPanel p1 = new JPanel();
-		p1.setLayout( new BoxLayout(p1, BoxLayout.Y_AXIS));
-		p1.setBorder(blackline);
-		p1.setPreferredSize(new Dimension(BOARDWIDTH/5, BOARDHEIGHT));
-
-		//buttons
+        //buttons
         JLabel playerName = new JLabel("Elizas turn");
         playerName.setAlignmentX(Component.CENTER_ALIGNMENT);
-		JButton roll = new JButton("ROLL");
-		roll.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton roll = new JButton("ROLL");
+        roll.setAlignmentX(Component.CENTER_ALIGNMENT);
         roll.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                roll();
+            }
+        }
+        );
+
+        JButton suggestion = new JButton("SUGGESTION");
+        suggestion.setAlignmentX(Component.CENTER_ALIGNMENT);
+        suggestion.addActionListener( new ActionListener() {
               public void actionPerformed(ActionEvent e)
               {
-                  roll();
+                  makeSuggestion();
               }
           }
         );
-
-		JButton suggestion = new JButton("SUGGESTION");
-		suggestion.setAlignmentX(Component.CENTER_ALIGNMENT);
-		suggestion.addActionListener( new ActionListener() {
-		   public void actionPerformed(ActionEvent e)
-		   {
-			   makeSuggestion();
-		   }
-	   	}
-		);
-		JButton accusation = new JButton("ACCUSTATION");
-		accusation.setAlignmentX(Component.CENTER_ALIGNMENT);
-		p1.add(playerName);
-		p1.add(roll);
-		p1.add(suggestion);
-		p1.add(accusation);
+        JButton accusation = new JButton("ACCUSTATION");
+        accusation.setAlignmentX(Component.CENTER_ALIGNMENT);
+        p1.add(playerName);
+        p1.add(roll);
+        p1.add(suggestion);
+        p1.add(accusation);
 
 
-		// bottom
-		JPanel p2= new JPanel();
-		p2.setLayout( new BorderLayout());
-		p2.setBorder(blackline);
-		p2.setPreferredSize(new Dimension(BOARDWIDTH, BOARDHEIGHT/5));
+        // bottom
+        JPanel p2= new JPanel();
+        p2.setLayout( new BorderLayout());
+        p2.setBorder(blackline);
+        p2.setPreferredSize(new Dimension(BOARDWIDTH, BOARDHEIGHT/5));
 
-		JPanel p2a = new JPanel();
-		p2a.setLayout( new FlowLayout());
-		p2a.setBorder(blackline);
-		p2a.setPreferredSize(new Dimension(700, BOARDHEIGHT/10));
-        for(String name : images){ // draws the hand
-            ImageIcon i = drawHand(name);
+        JPanel p2a = new JPanel();
+        p2a.setLayout( new FlowLayout());
+        p2a.setBorder(blackline);
+        p2a.setPreferredSize(new Dimension(700, BOARDHEIGHT/10));
+        for(Card c : player.handList){ // draws the hand
+            String name = c.getName().toLowerCase();
+            ImageIcon i = drawHand(name + ".jpg");
             p2a.add(new JLabel(i));
         }
-		p2.add( p2a, "East");
+        p2.add( p2a, "East");
 
 
-		JPanel p2b = new JPanel();
-		p2b.setLayout( new BoxLayout(p2b, BoxLayout.Y_AXIS));
-		p2b.setBorder(blackline);
-		p2b.setPreferredSize(new Dimension(BOARDWIDTH/2, BOARDHEIGHT/10));
+        JPanel p2b = new JPanel();
+        p2b.setLayout( new BoxLayout(p2b, BoxLayout.Y_AXIS));
+        p2b.setBorder(blackline);
+        p2b.setPreferredSize(new Dimension(BOARDWIDTH/2, BOARDHEIGHT/10));
         p2b.add(new JLabel(diceOne));
 
         p2b.add(new JLabel(diceTwo));
-		p2.add( p2b, "West");
+        p2.add( p2b, "West");
 
-		// graph
-		JPanel p3 = drawBoard();
+        // graph
+        JPanel p3 = drawBoard();
 
-		//add(p3);
+        //add(p3);
 
-		mainFrame.getContentPane().add( p1, "West");
-		mainFrame.getContentPane().add( p2, "South");
-		mainFrame.getContentPane().add(p3,"Center");
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setSize(BOARDWIDTH, BOARDHEIGHT);
-		mainFrame.setVisible(true);
+        mainFrame.getContentPane().add( p1, "West");
+        mainFrame.getContentPane().add( p2, "South");
+        mainFrame.getContentPane().add(p3,"Center");
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setSize(BOARDWIDTH, BOARDHEIGHT);
+        mainFrame.setVisible(true);
 
-	}
-	public void mainMenu(){
-    	JFrame f = new JFrame();
-		JPanel panel = new JPanel();
-		//panel.setLayout(new GridBagLayout());
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    }/*
+    public void mainMenu(){
+        JFrame f = new JFrame();
+        JPanel panel = new JPanel();
+        //panel.setLayout(new GridBagLayout());
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		JLabel intro = new JLabel("Welcome to Cluedo!");
-		intro.setFont(new Font("Serif", Font.PLAIN, 24));
-		intro.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel.add(intro);
-		JButton newGame = new JButton("New Game");
-		newGame.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel intro = new JLabel("Welcome to Cluedo!");
+        intro.setFont(new Font("Serif", Font.PLAIN, 24));
+        intro.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(intro);
+        JButton newGame = new JButton("New Game");
+        newGame.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		JButton exit = new JButton("Exit");
-		exit.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel.add(newGame);
-		panel.add(exit);
-		f.add(panel);
+        JButton exit = new JButton("Exit");
+        exit.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(newGame);
+        panel.add(exit);
+        f.add(panel);
 
-		newGame.addActionListener( new ActionListener() {
-		   public void actionPerformed(ActionEvent e)
-		   {
-			   howMany();
-		   }
-	   	}
-		);
+        newGame.addActionListener( new ActionListener() {
+           public void actionPerformed(ActionEvent e)
+           {
+               howMany(sc);
+           }
+       }
+        );
 
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(350, 200);
-		f.setVisible(true);
-	}
-    public void addPlayer() {
-//        System.out.println("Current size: " + mainCluedo.players.size());
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setSize(350, 200);
+        f.setVisible(true);
+    }*/
+    public void addPlayer(Scanner sc) {
+        System.out.println("Current size: " + cluedoMainGame.players.size());
 
         JFrame frame2 = new JFrame();
         JPanel panel = new JPanel();
@@ -234,34 +238,35 @@ public class GraphicalInterface extends JFrame{
         frame2.add(panel);
 
         confirm.addActionListener( new ActionListener() {
-               public void actionPerformed(ActionEvent e)
-               {
-                   String selectedName="";
-                   Enumeration elements = buttonGroup.getElements();
-                   AbstractButton a=null;
-                   while(elements.hasMoreElements()){
-                       JRadioButton button = (JRadioButton)elements.nextElement();
-                       if (button.isSelected()){
-                           selectedName = button.getText();
-                           a = button;
-                           System.out.println("selected: " + button.getText());
+           public void actionPerformed(ActionEvent e)
+           {
+               String selectedName="";
+               Enumeration elements = buttonGroup.getElements();
+               AbstractButton a=null;
+               while(elements.hasMoreElements()){
+                   JRadioButton button = (JRadioButton)elements.nextElement();
+                   if (button.isSelected()){
+                       selectedName = button.getText();
+                       System.out.println(selectedName);
+                       a = button;
+                       System.out.println("selected: " + button.getText());
 
-                       }
-                   }
-                   buttonGroup.remove(a);
-                   buttonGroup.clearSelection();
-                   addPlayerCounter+=1;
-                   cluedoMainGame.addPlayerGUI(playerName.getText(), selectedName, 0,0,null,null,null,null );
-
-                   if (cluedoMainGame.players.size() < playerAmount) {
-                       frame2.setVisible(false);
-                       addPlayer();
-                   }
-                   else{
-                       frame2.setVisible(false);
                    }
                }
+               buttonGroup.remove(a);
+               buttonGroup.clearSelection();
+               addPlayerCounter+=1;
+               cluedoMainGame.addPlayerGUI(playerName.getText(), selectedName, 0,0,null,null,null,null );
+
+               if (cluedoMainGame.players.size() < playerAmount) {
+                   frame2.setVisible(false);
+                   addPlayer(sc);
+               }
+               else{
+                   frame2.setVisible(false);
+               }
            }
+       }
         );
 
         frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -270,7 +275,7 @@ public class GraphicalInterface extends JFrame{
     }
 
 
-    public void howMany() {
+    public void howMany(Scanner sc) {
         JFrame frame1 = new JFrame();
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -289,15 +294,14 @@ public class GraphicalInterface extends JFrame{
               public void actionPerformed(ActionEvent e)
               {
                   frame1.setVisible(false);
-
                   String stringNumOfPlayers = players.getText();
                   playerAmount = Integer.parseInt(stringNumOfPlayers);
-    //			   System.out.println("Num of players: " + intNumOfPlayers);
-                  addPlayer();
+                  addPlayer(sc);
 
               }
           }
         );
+
 
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame1.setSize(500, 200);
@@ -308,40 +312,37 @@ public class GraphicalInterface extends JFrame{
 
     public void makeSuggestion(){
 
-		JFrame f = new JFrame("panel");
-		JPanel suggestionPanel = new JPanel();
-        suggestionPanel.setLayout(new BoxLayout(suggestionPanel, BoxLayout.Y_AXIS));
+        JFrame f = new JFrame("panel");
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 
-		JTextField personField = new JTextField(30); // person
-		JTextField weaponField = new JTextField(30); // weapon
-		JTextField roomField = new JTextField(30); // room
+        JTextField b1 = new JTextField(30);
+        JTextField b2 = new JTextField(30);
+        JTextField b3 = new JTextField(30);
 
-		JLabel suggestionlabel = new JLabel("Make A Suggestion");
-        suggestionlabel.setFont(new Font("Serif", Font.PLAIN, 30));
-		JLabel persontxt = new JLabel("Person: ");
-		persontxt.setFont(new Font("Serif", Font.PLAIN, 24));
-		JLabel weapontxt = new JLabel("Weapon: ");
-		weapontxt.setFont(new Font("Serif", Font.PLAIN, 24));
-		JLabel roomtxt = new JLabel("Room: ");
-		roomtxt.setFont(new Font("Serif", Font.PLAIN, 24));
-        JButton confirmSuggestion = new JButton("Confirm");
+        JLabel l = new JLabel("Make A Suggestion");
+        l.setFont(new Font("Serif", Font.PLAIN, 30));
+        JLabel persontxt = new JLabel("Person: ");
+        persontxt.setFont(new Font("Serif", Font.PLAIN, 24));
+        JLabel weapontxt = new JLabel("Weapon: ");
+        weapontxt.setFont(new Font("Serif", Font.PLAIN, 24));
+        JLabel roomtxt = new JLabel("Room: ");
+        roomtxt.setFont(new Font("Serif", Font.PLAIN, 24));
 
-        suggestionPanel.add(suggestionlabel);
-        suggestionPanel.add(persontxt);
-        suggestionPanel.add(personField);
-        suggestionPanel.add(weapontxt);
-        suggestionPanel.add(weaponField);
-        suggestionPanel.add(roomtxt);
-        suggestionPanel.add(roomField);
-        suggestionPanel.add(confirmSuggestion);
+        p.add(l);
+        p.add(persontxt);
+        p.add(b1);
+        p.add(weapontxt);
+        p.add(b2);
+        p.add(roomtxt);
+        p.add(b3);
+        f.add(p);
+        f.setSize(400, 250);
+        f.setVisible(true);
+    }
 
-        f.add(suggestionPanel);
-		f.setSize(400, 250);
-		f.setVisible(true);
-	}
-
-	public ImageIcon drawHand(String imgName){
-		BufferedImage lhimg = null;
+    public ImageIcon drawHand(String imgName){
+        BufferedImage lhimg = null;
         try {
             lhimg = ImageIO.read(new File("images/" +imgName +""));
         } catch (IOException e) {
@@ -351,64 +352,63 @@ public class GraphicalInterface extends JFrame{
         ImageIcon imaglIcon = new ImageIcon(limg);
 
 
-		return imaglIcon;
-	}
+        return imaglIcon;
+    }
 
-	public ImageIcon resize(String imgName){
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(new File("images/" +imgName +""));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Image imgs = img.getScaledInstance(31,28, Image.SCALE_SMOOTH);
-		ImageIcon imageIcon = new ImageIcon(imgs);
-		return imageIcon;
-	}
+    public ImageIcon resize(String imgName){
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File("images/" +imgName +""));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Image imgs = img.getScaledInstance(31,28, Image.SCALE_SMOOTH);
+        ImageIcon imageIcon = new ImageIcon(imgs);
+        return imageIcon;
+    }
 
 
-	public JPanel drawBoard(){
-		JPanel p3 = new JPanel();
-		ImageIcon[][] grid;
+    public JPanel drawBoard(){
+        JPanel p3 = new JPanel();
+        ImageIcon[][] grid;
 
-		addTile();
+        addTile();
 
-		int width = 25;
-		int height = 26;
-		p3.setLayout(new GridLayout(width,height));
+        int width = 25;
+        int height = 26;
+        p3.setLayout(new GridLayout(width,height));
 
-		grid=new ImageIcon[width][height]; //allocate the size of grid
-		for(Tile tile : tiles){
-			grid[tile.getX()][tile.getY()] = tile.getImage();
-			p3.add(new JLabel(grid[tile.getX()][tile.getY()])); //adds button to grid
+        grid=new ImageIcon[width][height]; //allocate the size of grid
+        for(Tile tile : tiles){
+            grid[tile.getX()][tile.getY()] = tile.getImage();
+            p3.add(new JLabel(grid[tile.getX()][tile.getY()])); //adds button to grid
 
-		}
+        }
 
-		return p3;
-	}
+        return p3;
+    }
 
-	public void addTile(){
-		try {
-			FileReader fr = new FileReader("boardmapGUI.txt");
-			BufferedReader dataReader = new BufferedReader(fr);
+    public void addTile(){
+        try {
+            FileReader fr = new FileReader("boardmapGUI.txt");
+            BufferedReader dataReader = new BufferedReader(fr);
 
             updatePositions();
-			String currentLine;
-			while ((currentLine = dataReader.readLine()) != null) {
-				String[] loadArray = currentLine.split(","); // splits the lines by the comma into an array for each line
+            String currentLine;
+            while ((currentLine = dataReader.readLine()) != null) {
+                String[] loadArray = currentLine.split(","); // splits the lines by the comma into an array for each line
 
-				if (loadArray.length > 2) {
-					String value = loadArray[0];
-					if (value == null) {
-						break;
-					}
-					int col = Integer.parseInt(loadArray[1]); // col position
-					int row = Integer.parseInt(loadArray[2]); // row position
+                if (loadArray.length > 2) {
+                    String value = loadArray[0];
+                    if (value == null) {
+                        break;
+                    }
+                    int col = Integer.parseInt(loadArray[1]); // col position
+                    int row = Integer.parseInt(loadArray[2]); // row position
 
                     boolean done =false;
                     for(String txt : startingPos.keySet()){
                         List<Integer> s = startingPos.get(txt);
-                        System.out.println(s);
                         Integer x =s.get(0);
                         Integer y = s.get(1);
 
@@ -441,14 +441,14 @@ public class GraphicalInterface extends JFrame{
                     }
 
 
-				}
-			}
+                }
+            }
 
-		} catch (IOException e) {
-			System.out.println(e);
-		}
+        } catch (IOException e) {
+            System.out.println(e);
+        }
 
-	}
+    }
 
     public void updatePositions() {
         startingPos.put("plumTile.jpg", Arrays.asList(23, 19));
@@ -482,7 +482,56 @@ public class GraphicalInterface extends JFrame{
         diceTwo = new ImageIcon(dice2);
 
     }
+
+    public void move(){
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_LEFT) {
+            System.out.println("Left key pressed");
+        }
+
+        if (key == KeyEvent.VK_RIGHT) {
+            System.out.println("Right key typed");
+        }
+
+        if (key == KeyEvent.VK_UP) {
+            System.out.println("Up key pressed");
+        }
+
+        if (key == KeyEvent.VK_DOWN) {
+            System.out.println("Down key Pressed");
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            System.out.println("Right key typed");
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            System.out.println("Left key typed");
+        }
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            System.out.println("Right key Released");
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            System.out.println("Left key Released");
+        }
+    }
 }
 
 
-     
+
+
