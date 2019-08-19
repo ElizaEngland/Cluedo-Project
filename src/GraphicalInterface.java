@@ -227,44 +227,27 @@ public class GraphicalInterface extends JFrame{
             JRadioButton button = (JRadioButton)elements.nextElement();
             panel.add(button);
         }
-//		for (JRadioButton charB : charButtons) {
-//
-//		}
-//
-//		for (JRadioButton charB : charButtons) {
-//			if (charB.isSelected()){
-//				selectedName = charB.getText();
-//				System.out.println("selected: " + charB.getText());
-//			}
-//		}
-//		charButtons.remove(selectedName);
 
-
-//		for(int i = 0; i < characters.size(); i++) {
-//			token = new JRadioButton();
-//			token.setText(characters.get(i));
-//			panel.add(token);
-//		}
-//		System.out.println();
         JButton confirm = new JButton("Confirm player");
         panel.add(confirm);
         frame2.add(panel);
-//		System.out.println(selectedName);
-//		final String s = selectedName;
-//		System.out.println(s);
 
         confirm.addActionListener( new ActionListener() {
                public void actionPerformed(ActionEvent e)
                {
                    String selectedName="";
                    Enumeration elements = buttonGroup.getElements();
+                   AbstractButton a=null;
                    while(elements.hasMoreElements()){
                        JRadioButton button = (JRadioButton)elements.nextElement();
                        if (button.isSelected()){
                            selectedName = button.getText();
+                           a = button;
                            System.out.println("selected: " + button.getText());
+
                        }
                    }
+                   buttonGroup.remove(a);
                    buttonGroup.clearSelection();
                    addPlayerCounter+=1;
                    mainCluedo.addPlayerGUI(playerName.getText(), selectedName, 0,0,null,null,null,null );
