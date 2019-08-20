@@ -60,6 +60,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     Player player;
     Tile currentTile;
     String typeOfTile;
+    boolean inRoom =false;
 
 
 
@@ -460,45 +461,39 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         }
 
         if(canMove){
-            if(direction==1){
-
+            if(direction==1){ // north
                 if(checkTile(currentTile,x,y-1)){
                     y--;
                     temp.add(x);
                     temp.add(y);
                     positions.replace(name,temp);
-                    System.out.println("North");
                     moves--;
                 }
-
             }
-            if(direction==2){
+            if(direction==2){ // east
                 if(checkTile(currentTile,x+1,y)) {
                     x++;
                     temp.add(x);
                     temp.add(y);
                     positions.replace(name, temp);
-                    System.out.println("East");
                     moves--;
                 }
             }
-            if(direction==-1){
+            if(direction==-1){ // south
                 if(checkTile(currentTile,x,y+1)) {
                     y++;
                     temp.add(x);
                     temp.add(y);
                     positions.replace(name, temp);
-                    System.out.println("South");
                     moves--;
                 }
             }
-            if(direction==-2){
+            if(direction==-2){ //west
                 if(checkTile(currentTile,x-1,y)) {
                     x--;
                     temp.add(x);
                     temp.add(y);
                     positions.replace(name, temp);
-                    System.out.println("West");
                     moves--;
                 }
             }
@@ -657,35 +652,65 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         for(Tile t : tiles){
             if(y == t.getX() && x == t.getY()){
 
-                if(t.isRoom() && typeOfTile.equals("door")){
-                    System.out.println("yeeeee");
-                    return true;
-                }
+                if(inRoom){
+                    if(t.isDoor()){
+                        inRoom = false;
+                        typeOfTile = "exit door";
+                        return true;
+                    }
+                    else if(t.isRoom()){
+                        //inRoom=true;
+                        typeOfTile = "room";
+                        return true;
+                    }
+                    else if (t.isOutOfBounds()){
+                        typeOfTile = "out";
+                        System.out.println("out of bounds");
+                        return false;
+                    }
+                    else if(t.isHallway()){
+                        //onDoorTile=true;
+                        System.out.println("hallway");
+                        return false;
+                    }
+                    else{
+                        System.out.println("idk");
+                        return false;
+                    }
 
-                if(t.isRoom()){
-                    typeOfTile = "room";
-                    System.out.println("is room");
-                    return false;
-                }
-                else if(t.isDoor()){
-                    typeOfTile = "door";
-                    System.out.println("is door");
-                    return true;
-                }
-                else if (t.isOutOfBounds()){
-                    typeOfTile = "out";
-                    System.out.println("out of bounds");
-                    return false;
-                }
-                else if(t.isHallway()){
-                    //onDoorTile=true;
-                    System.out.println("hallway");
-                    return true;
                 }
                 else{
-                    System.out.println("idk");
-                    return false;
+                    if(t.isRoom() && typeOfTile.equals("door")){
+                        inRoom=true;
+                        return true;
+                    }
+
+                    if(t.isRoom()){
+                        typeOfTile = "room";
+                        System.out.println("is room");
+                        return false;
+                    }
+                    else if(t.isDoor()){
+                        typeOfTile = "door";
+                        System.out.println("is door");
+                        return true;
+                    }
+                    else if (t.isOutOfBounds()){
+                        typeOfTile = "out";
+                        System.out.println("out of bounds");
+                        return false;
+                    }
+                    else if(t.isHallway()){
+                        //onDoorTile=true;
+                        System.out.println("hallway");
+                        return true;
+                    }
+                    else{
+                        System.out.println("idk");
+                        return false;
+                    }
                 }
+
 
             }
         }
