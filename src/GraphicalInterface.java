@@ -96,7 +96,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         this.cluedoMainGame = cluedoMainGame;
         howMany();
-        //howMany();
 
     }
 
@@ -126,13 +125,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         p2.add(p2b, "West");
         p2.add(p2a,"East");
 
-
-       /* JFrame dice = new JFrame();
-        dice.getContentPane().add(p1,"West");
-        dice.getContentPane().add(p2,"South");
-        dice.getContentPane().add(p3,"Center");
-        dice.setSize(BOARDWIDTH, BOARDHEIGHT);
-        dice.setVisible(true);*/
         mainFrame.getContentPane().add( p1, "West");
         mainFrame.getContentPane().add( p2, "South");
         mainFrame.getContentPane().add( p3, "Center");
@@ -418,7 +410,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                             tiles.add(newTile);
                         } else if (value.equals("h")) {
                             ImageIcon r = resize("hallwayTile.jpg");
-                            Tile newTile = new Tile(r, false, false, false, true, row, col);
+                            Tile newTile = new Tile(r, false, true, false, false, row, col);
                             tiles.add(newTile);
                         } else if (value.equals("D")) {
                             ImageIcon r = resize("doorTile.jpg");
@@ -455,42 +447,52 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         System.out.println("Updating positions..");
         int x = coords.get(0);
         int y = coords.get(1);
-        System.out.println(x);
-        System.out.println(y);
+      //  System.out.println(x);
+       // System.out.println(y);
         List<Integer> temp = new ArrayList<Integer>();
 
         if(canMove){
             if(direction==1){
-                y--;
-                temp.add(x);
-                temp.add(y);
-                positions.replace(name,temp);
-                System.out.println("North");
-                moves--;
+
+                if(checkTile(x,y-1)){
+                    y--;
+                    temp.add(x);
+                    temp.add(y);
+                    positions.replace(name,temp);
+                    System.out.println("North");
+                    moves--;
+                }
+
             }
             if(direction==2){
-                x++;
-                temp.add(x);
-                temp.add(y);
-                positions.replace(name,temp);
-                System.out.println("East");
-                moves--;
+                if(checkTile(x+1,y)) {
+                    x++;
+                    temp.add(x);
+                    temp.add(y);
+                    positions.replace(name, temp);
+                    System.out.println("East");
+                    moves--;
+                }
             }
             if(direction==-1){
-                y++;
-                temp.add(x);
-                temp.add(y);
-                positions.replace(name,temp);
-                System.out.println("South");
-                moves--;
+                if(checkTile(x,y+1)) {
+                    y++;
+                    temp.add(x);
+                    temp.add(y);
+                    positions.replace(name, temp);
+                    System.out.println("South");
+                    moves--;
+                }
             }
             if(direction==-2){
-                x--;
-                temp.add(x);
-                temp.add(y);
-                positions.replace(name,temp);
-                System.out.println("West");
-                moves--;
+                if(checkTile(x-1,y)) {
+                    x--;
+                    temp.add(x);
+                    temp.add(y);
+                    positions.replace(name, temp);
+                    System.out.println("West");
+                    moves--;
+                }
             }
         }
 
@@ -641,6 +643,27 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         if(e.getSource() == suggestion){
             makeSuggestion();
         }
+    }
+
+    public boolean checkTile(int x, int y) {
+        for(Tile t : tiles){
+            if(y == t.getX() && x == t.getY()){
+                if(t.isRoom()){
+                    System.out.println("is room");
+                    return false;
+                }
+                else if (t.isOutOfBounds()){
+                    System.out.println("out of bounds");
+                    return false;
+                }
+                else{
+                    System.out.println("yay");
+                    return true;
+                }
+            }
+        }
+        System.out.println("not on board");
+        return false;
     }
 }
 
