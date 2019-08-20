@@ -49,6 +49,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     boolean canMove = false;
     private JFrame mainFrame;
     private JFrame suggestionFrame;
+    private JFrame accusationFrame;
     private JPanel p1;
     private JPanel p2;
     private JPanel p2a;
@@ -59,8 +60,10 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     private String playerTileName = "plumTile.jpg";
     JButton roll;
     JButton suggestion;
+    JButton accusation;
     JButton confirm;
     JButton confirmSuggestion;
+    JButton confirmAccusation;
     Player player;
     Tile currentTile;
     String typeOfTile;
@@ -103,13 +106,10 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         roomGroup.add(new JRadioButton("Library"));
         roomGroup.add(new JRadioButton("Study"));
 
-
         this.cluedoMainGame = cluedoMainGame;
         howMany();
 
     }
-
-
 
     public void updateMainFrame(Player player){
 
@@ -298,8 +298,46 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     public void makeSuggestion(){
 
-
         suggestionFrame = new JFrame("panel");
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+
+
+        JLabel l = new JLabel("Make A Suggestion");
+        p.add(l);
+        JLabel per = new JLabel("Choose a person:");
+        p.add(per);
+        Enumeration elementsP = characterGroup.getElements();
+        while(elementsP.hasMoreElements()){
+            JRadioButton button = (JRadioButton)elementsP.nextElement();
+            p.add(button);
+        }
+
+        JLabel weap = new JLabel("Choose a weapon:");
+        p.add(weap);
+        Enumeration elementsW = weaponGroup.getElements();
+        while(elementsW.hasMoreElements()){
+            JRadioButton button = (JRadioButton)elementsW.nextElement();
+            p.add(button);
+        }
+
+        JLabel room = new JLabel(" Your u are in goes here!");
+        p.add(room);
+
+
+        confirmSuggestion = new JButton("Confirm");
+        confirmSuggestion.addActionListener(this);
+        p.add(confirmSuggestion);
+
+        suggestionFrame.add(p);
+        suggestionFrame.setSize(250, 650);
+        suggestionFrame.setVisible(true);
+        suggestionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    }
+
+    public void makeAccusation(){
+        accusationFrame = new JFrame("panel");
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 
@@ -330,45 +368,14 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             p.add(button);
         }
 
-        confirmSuggestion = new JButton("Confirm");
-        confirmSuggestion.addActionListener(this);
-        p.add(confirmSuggestion);
+        confirmAccusation= new JButton("Confirm");
+        confirmAccusation.addActionListener(this);
+        p.add(confirmAccusation);
 
-        suggestionFrame.add(p);
-        suggestionFrame.setSize(250, 650);
-        suggestionFrame.setVisible(true);
-        suggestionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-/*
-        if(inRoom) {
-
-            JFrame f = new JFrame("panel");
-            JPanel p = new JPanel();
-            p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-
-            JTextField b1 = new JTextField(30);
-            JTextField b2 = new JTextField(30);
-            JTextField b3 = new JTextField(30);
-
-            JLabel l = new JLabel("Make A Suggestion");
-            l.setFont(new Font("Serif", Font.PLAIN, 30));
-            JLabel persontxt = new JLabel("Person: ");
-            persontxt.setFont(new Font("Serif", Font.PLAIN, 24));
-            JLabel weapontxt = new JLabel("Weapon: ");
-            weapontxt.setFont(new Font("Serif", Font.PLAIN, 24));
-            JLabel roomtxt = new JLabel("Room: ");
-            roomtxt.setFont(new Font("Serif", Font.PLAIN, 24));
-
-            p.add(l);
-            p.add(persontxt);
-            p.add(b1);
-            p.add(weapontxt);
-            p.add(b2);
-            p.add(roomtxt);
-            p.add(b3);
-            f.add(p);
-            f.setSize(400, 250);
-            f.setVisible(true);
-        }*/
+        accusationFrame.add(p);
+        accusationFrame.setSize(250, 650);
+        accusationFrame.setVisible(true);
+        accusationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public ImageIcon drawHand(String imgName){
@@ -624,8 +631,11 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         suggestion.setFocusable(false);
         suggestion.setAlignmentX(Component.CENTER_ALIGNMENT);
         suggestion.addActionListener(this);
-        JButton accusation = new JButton("ACCUSTATION");
+
+        accusation = new JButton("ACCUSATION");
         accusation.setAlignmentX(Component.CENTER_ALIGNMENT);
+        accusation.setFocusable(false);
+        accusation.addActionListener(this);
 
         p1.add(playerName);
         p1.add(roll);
@@ -688,20 +698,19 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             makeSuggestion();
         }
 
+        if(e.getSource() == accusation){
+            makeAccusation();
+        }
+
         if(e.getSource() == confirmSuggestion){
             int count=0;
-            System.out.println("Here we compare hands");
+
             Enumeration characterEle = characterGroup.getElements();
             Enumeration weaponEle = weaponGroup.getElements();
-            Enumeration roomEle = roomGroup.getElements();
-            AbstractButton a=null;
             while(characterEle.hasMoreElements()){
                 JRadioButton button = (JRadioButton)characterEle.nextElement();
                 if (button.isSelected()){
                     count++;
-                    //selectedName = button.getText();
-                    //System.out.println(selectedName);
-                    a = button;
                     System.out.println("selected: " + button.getText());
 
                 }
@@ -711,9 +720,36 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 JRadioButton button = (JRadioButton)weaponEle.nextElement();
                 if (button.isSelected()){
                     count++;
-                    //selectedName = button.getText();
-                    //System.out.println(selectedName);
-                    a = button;
+                    System.out.println("selected: " + button.getText());
+
+                }
+            }
+
+            if(count==2) {
+                suggestionFrame.setVisible(false);
+            }
+
+        }
+
+        if(e.getSource() == confirmAccusation){
+            int count=0;
+            System.out.println("Here we compare hands");
+            Enumeration characterEle = characterGroup.getElements();
+            Enumeration weaponEle = weaponGroup.getElements();
+            Enumeration roomEle = roomGroup.getElements();
+            while(characterEle.hasMoreElements()){
+                JRadioButton button = (JRadioButton)characterEle.nextElement();
+                if (button.isSelected()){
+                    count++;
+                    System.out.println("selected: " + button.getText());
+
+                }
+            }
+
+            while(weaponEle.hasMoreElements()){
+                JRadioButton button = (JRadioButton)weaponEle.nextElement();
+                if (button.isSelected()){
+                    count++;
                     System.out.println("selected: " + button.getText());
 
                 }
@@ -723,19 +759,18 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 JRadioButton button = (JRadioButton)roomEle.nextElement();
                 if (button.isSelected()){
                     count++;
-                    //selectedName = button.getText();
-                    //System.out.println(selectedName);
-                    a = button;
                     System.out.println("selected: " + button.getText());
 
                 }
             }
 
             if(count==3) {
-                suggestionFrame.setVisible(false);
+                accusationFrame.setVisible(false);
             }
 
         }
+
+
     }
 
     public boolean checkTile(Tile current, int x, int y) {
