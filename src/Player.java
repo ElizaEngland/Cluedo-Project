@@ -31,10 +31,6 @@ class Player {
     String previousTile;
     boolean onDoor;
     HashSet<String> pastCords;
-    boolean suggestionButtonClick;
-    boolean rollButtonClick;
-    boolean accusationnButtonClick;
-
 
     /**
      * Creates a player in the game
@@ -65,7 +61,6 @@ class Player {
         this.winningCards = winningCards;
     }
 
-
     /**
      * Adds a card to the players hand
      *
@@ -85,7 +80,13 @@ class Player {
      * @param allPlayers   This is the list of all of the players - including the eliminated players
      * @return int to determine if the player is being eliminated
      */
-    public int turn(Scanner sc, Board currentboard, Player player, List<Player> players, List<Player> allPlayers) {
+    public int turn(Scanner sc, Board currentboard, Player player, List<Player> players, List<Player> allPlayers, GraphicalInterface gui) {
+
+        if (gui.isSuggestionmade()){ // if there has been a suggestion
+            gui.makeSuggestion(); // make the suggestion
+
+        }
+
         pastCords = new HashSet<>(); // past coords of the player
         turnRanking = allPlayers.indexOf(this);
         currentboard.boardMapping[this.row][this.col] = player.characterLetter;
@@ -93,15 +94,9 @@ class Player {
         Boolean correctInput = false;
         String input;
         while (!correctInput) {
-//            currentboard.printBoard();
+            currentboard.printBoard();
             System.out.println("\n=== " + getName().toUpperCase() + " TURN ===");
             System.out.println("ROLL or SUGGESTION or ACCUSATION");
-            if (suggestionButtonClick==true){
-                suggestionButtonClick = false;
-//                this.suggestionTurn(persont, weapont, roomt);
-                boolean rollButtonClick;
-                boolean accusationnButtonClick;
-            }
             input = sc.next();
             if (input.equalsIgnoreCase("roll")) {
                 int x = diceRollingMoving(sc, currentboard, player, players, allPlayers);

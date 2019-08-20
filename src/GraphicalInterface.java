@@ -42,6 +42,10 @@ public class GraphicalInterface extends JFrame implements KeyListener {
     private ButtonGroup buttonGroup = new ButtonGroup();
     private ArrayList<JRadioButton> charButtons;
     public cluedoMain cluedoMainGame;
+    public boolean suggestionmade;
+    public boolean accusationmade;
+    public boolean diceroll;
+//    public Player currentPlayer;
 
 
     public GraphicalInterface(cluedoMain cluedoMainGame){
@@ -78,13 +82,14 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         buttonGroup.add(plum);
 
         this.cluedoMainGame = cluedoMainGame;
+        mainFrame();
         howMany();
         //howMany();
 
     }
 
 
-    public void mainFrame(Player player){
+    public void mainFrame(){
 
         Border blackline = BorderFactory.createLineBorder(Color.black);
         JFrame mainFrame = new JFrame();
@@ -114,6 +119,7 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         roll.setAlignmentX(Component.CENTER_ALIGNMENT);
         roll.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 roll();
             }
         }
@@ -124,7 +130,8 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         suggestion.addActionListener( new ActionListener() {
               public void actionPerformed(ActionEvent e)
               {
-                  makeSuggestion();
+                  suggestionmade = true; // makes the boolean true
+//                  makeSuggestion();
               }
           }
         );
@@ -146,11 +153,11 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         p2a.setLayout( new FlowLayout());
         p2a.setBorder(blackline);
         p2a.setPreferredSize(new Dimension(700, BOARDHEIGHT/10));
-        for(Card card : player.handList){ // draws the hand
-            String name = card.getName().toLowerCase() + ".jpg";
-            ImageIcon i = drawHand(name);
-            p2a.add(new JLabel(i));
-        }
+//        for(Card card : player.handList){ // draws the hand
+//            String name = card.getName().toLowerCase() + ".jpg";
+//            ImageIcon i = drawHand(name);
+//            p2a.add(new JLabel(i));
+//        }
         p2.add( p2a, "East");
 
 
@@ -274,6 +281,17 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         frame2.setVisible(true);
     }
 
+    public boolean isSuggestionmade() {
+        return suggestionmade;
+    }
+
+    public boolean isAccusationmade() {
+        return accusationmade;
+    }
+
+    public boolean isDiceroll() {
+        return diceroll;
+    }
 
     public void howMany() {
         JFrame frame1 = new JFrame();
@@ -309,6 +327,11 @@ public class GraphicalInterface extends JFrame implements KeyListener {
 
 
     public void makeSuggestion(){
+        System.out.println("making uss");
+        // if they are making a suggestion
+        // change the boolean to true
+        suggestionmade = true;
+        // add it to the current player
 
         JFrame f = new JFrame("panel");
         JPanel p = new JPanel();
@@ -326,6 +349,8 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         weapontxt.setFont(new Font("Serif", Font.PLAIN, 24));
         JLabel roomtxt = new JLabel("Room: ");
         roomtxt.setFont(new Font("Serif", Font.PLAIN, 24));
+        JButton confirm = new JButton("Confirm");
+
 
         p.add(l);
         p.add(persontxt);
@@ -334,6 +359,15 @@ public class GraphicalInterface extends JFrame implements KeyListener {
         p.add(b2);
         p.add(roomtxt);
         p.add(b3);
+        p.add(confirm);
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                    f.setVisible(false);
+
+            }
+        });
         f.add(p);
         f.setSize(400, 250);
         f.setVisible(true);

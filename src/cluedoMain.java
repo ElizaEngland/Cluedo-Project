@@ -31,6 +31,7 @@ class cluedoMain {
     boolean gameOver = false;
     Board currentboard;
     GraphicalInterface gui;
+    Player currentPlayerR;
 
     public cluedoMain() {
         this.noOfPlayers = 0;
@@ -102,9 +103,10 @@ class cluedoMain {
             currentboard.printBoard();
             // for all of the players
             for (int i = 0; i < players.size(); i++) {
+                currentPlayerR = players.get(i);
                 Player player = players.get(i);
-
-                int no = player.turn(reader, currentboard, player, players, allPlayers);
+//
+                int no = player.turn(reader, currentboard, player, players, allPlayers, gui);
                 if (no == 1) {
                     gameOver = true;
                     i = players.size();
