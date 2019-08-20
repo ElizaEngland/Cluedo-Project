@@ -627,10 +627,16 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         roll.setFocusable(false);
         roll.setAlignmentX(Component.CENTER_ALIGNMENT);
         roll.addActionListener(this);
+
         suggestion = new JButton("SUGGESTION");
         suggestion.setFocusable(false);
         suggestion.setAlignmentX(Component.CENTER_ALIGNMENT);
         suggestion.addActionListener(this);
+        if(inRoom){
+            suggestion.setVisible(true);
+        }else{
+            suggestion.setVisible(false);
+        }
 
         accusation = new JButton("ACCUSATION");
         accusation.setAlignmentX(Component.CENTER_ALIGNMENT);
