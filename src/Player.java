@@ -80,13 +80,7 @@ class Player {
      * @param allPlayers   This is the list of all of the players - including the eliminated players
      * @return int to determine if the player is being eliminated
      */
-    public int turn(Scanner sc, Board currentboard, Player player, List<Player> players, List<Player> allPlayers, GraphicalInterface gui) {
-
-        if (gui.isSuggestionmade()){ // if there has been a suggestion
-            gui.makeSuggestion(); // make the suggestion
-
-        }
-
+    public int turn(Scanner sc, Board currentboard, Player player, List<Player> players, List<Player> allPlayers) {
         pastCords = new HashSet<>(); // past coords of the player
         turnRanking = allPlayers.indexOf(this);
         currentboard.boardMapping[this.row][this.col] = player.characterLetter;

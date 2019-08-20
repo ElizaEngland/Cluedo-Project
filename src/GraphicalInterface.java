@@ -161,7 +161,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         mainFrame.setJMenuBar(menuBar);
 
         // column
-       createPanelOne();
+        createPanelOne();
 
 
         // bottom
@@ -225,36 +225,36 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         frame2.add(panel);
 
         confirm.addActionListener( new ActionListener() {
-           public void actionPerformed(ActionEvent e)
-           {
-               String selectedName="";
-               Enumeration elements = buttonGroup.getElements();
-               AbstractButton a=null;
-               while(elements.hasMoreElements()){
-                   JRadioButton button = (JRadioButton)elements.nextElement();
-                   if (button.isSelected()){
-                       selectedName = button.getText();
-                       System.out.println(selectedName);
-                       a = button;
-                       System.out.println("selected: " + button.getText());
+                                       public void actionPerformed(ActionEvent e)
+                                       {
+                                           String selectedName="";
+                                           Enumeration elements = buttonGroup.getElements();
+                                           AbstractButton a=null;
+                                           while(elements.hasMoreElements()){
+                                               JRadioButton button = (JRadioButton)elements.nextElement();
+                                               if (button.isSelected()){
+                                                   selectedName = button.getText();
+                                                   System.out.println(selectedName);
+                                                   a = button;
+                                                   System.out.println("selected: " + button.getText());
 
-                   }
-               }
-               buttonGroup.remove(a);
-               buttonGroup.clearSelection();
-               addPlayerCounter+=1;
-               cluedoMainGame.addPlayerGUI(enterPlayerName.getText(), selectedName, 0,0,null,null,null,null );
+                                               }
+                                           }
+                                           buttonGroup.remove(a);
+                                           buttonGroup.clearSelection();
+                                           addPlayerCounter+=1;
+                                           cluedoMainGame.addPlayerGUI(enterPlayerName.getText(), selectedName, 0,0,null,null,null,null );
 
-               if (cluedoMainGame.players.size() < playerAmount) {
-                   frame2.setVisible(false);
-                   addPlayer();
-               }
-               else{
-                   frame2.setVisible(false);
-                   cluedoMainGame.newGame();
-               }
-           }
-       }
+                                           if (cluedoMainGame.players.size() < playerAmount) {
+                                               frame2.setVisible(false);
+                                               addPlayer();
+                                           }
+                                           else{
+                                               frame2.setVisible(false);
+                                               cluedoMainGame.newGame();
+                                           }
+                                       }
+                                   }
         );
 
         frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -279,14 +279,14 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
 
         confirmNoOfPlayers.addActionListener( new ActionListener() {
-              public void actionPerformed(ActionEvent e)
-              {
-                  frame1.setVisible(false);
-                  String stringNumOfPlayers = players.getText();
-                  playerAmount = Integer.parseInt(stringNumOfPlayers);
-                  addPlayer();
-              }
-          }
+                                                  public void actionPerformed(ActionEvent e)
+                                                  {
+                                                      frame1.setVisible(false);
+                                                      String stringNumOfPlayers = players.getText();
+                                                      playerAmount = Integer.parseInt(stringNumOfPlayers);
+                                                      addPlayer();
+                                                  }
+                                              }
         );
 
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -592,8 +592,8 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         System.out.println("Updating dices..");
         p2b = new JPanel();
         p2b.removeAll();
-      //  p2b.setLayout( new BoxLayout(p2b, BoxLayout.Y_AXIS));
-       // p2b.setBorder(blackline);
+        //  p2b.setLayout( new BoxLayout(p2b, BoxLayout.Y_AXIS));
+        // p2b.setBorder(blackline);
         p2b.setPreferredSize(new Dimension(BOARDWIDTH/4, BOARDHEIGHT/10));
 
         JLabel turnsLeft = new JLabel(player.getName()+" has " + moves +" turns left.");
@@ -602,7 +602,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         p2b.add(turnsLeft,"South");
 
         //p2b.revalidate();
-       // p2b.repaint();
+        // p2b.repaint();
         p2.add( p2b, "West");
     }
 
