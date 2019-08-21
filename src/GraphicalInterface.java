@@ -286,6 +286,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     }
 
 
+    /**
+     * Asks how many players are playing the game
+     */
     public void howMany() {
         JFrame frame1 = new JFrame();
         JPanel panel = new JPanel();
@@ -319,6 +322,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     }
 
 
+    /**
+     * Makes a suggestion
+     */
     public void makeSuggestion(){
 
         suggestionFrame = new JFrame("panel");
@@ -358,6 +364,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     }
 
+    /**
+     * Makes an accusation
+     */
     public void makeAccusation(){
         accusationFrame = new JFrame("panel");
         JPanel p = new JPanel();
@@ -400,20 +409,28 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         accusationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    /**
+     * Draws a card
+     * @param imgName name of card images
+     * @return the image
+     */
     public ImageIcon drawHand(String imgName){
-        BufferedImage lhimg = null;
+        BufferedImage img = null;
         try {
-            lhimg = ImageIO.read(new File("images/" +imgName +""));
+            img = ImageIO.read(new File("images/" +imgName +""));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Image limg = lhimg.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
-        ImageIcon imaglIcon = new ImageIcon(limg);
-
-
-        return imaglIcon;
+        Image imgs = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
+        ImageIcon imageIcon = new ImageIcon(imgs);
+        return imageIcon;
     }
 
+    /**
+     * Resizes an image to fit the grid
+     * @param imgName name of image
+     * @return the resized image
+     */
     public ImageIcon resize(String imgName){
         BufferedImage img = null;
         try {
@@ -427,12 +444,13 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     }
 
 
+    /**
+     * Updates the grid
+     */
     public void updateBoard() {
-
-        System.out.println("Updating board..");
         p3 = new JPanel();
         JPanel pnl = new JPanel();
-        addTile();
+        addTile(); // adds all the tiles to the list, tiles
 
         int width = 25;
         int height = 26;
@@ -448,6 +466,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         p3.add(pnl);
     }
 
+    /**
+     * Adds each tile to the list of tiles
+     */
     public void addTile(){
         try {
             FileReader fr = new FileReader("boardmapGUI.txt");
@@ -467,7 +488,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
                     String roomName =null;
                     boolean done =false;
-                    for(String txt : positions.keySet()){
+                    for(String txt : positions.keySet()){ // adds all the players
                         List<Integer> s = positions.get(txt);
                         Integer x =s.get(0);
                         Integer y = s.get(1);
@@ -481,7 +502,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                     }
 
 
-                    if(!done) {
+                    if(!done) { // fills in the rest of the grid
                         if (value.equals("x")) { // if a room
                             ImageIcon r = resize("outOfBoundsTile.jpg");
                             Tile newTile = new Tile(r, false, false, false, true, row, col,roomName);
@@ -512,6 +533,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     }
 
+    /**
+     * Starting positions for players
+     */
     public void updateStartPositions() {
         positions.put("plumTile.jpg", Arrays.asList(23, 19));
         positions.put("greenTile.jpg", Arrays.asList(14, 0));
@@ -521,9 +545,13 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         positions.put("peacockTile.jpg", Arrays.asList(23, 6));
     }
 
+    /**
+     * Updates a positon of a player when they move
+     * @param name name of player moving
+     * @param direction direction they want to move in
+     */
     public void updatePosition(String name, int direction){
         List<Integer> coords = positions.get(name);
-        System.out.println("Updating positions..");
         int x = coords.get(0);
         int y = coords.get(1);
         List<Integer> temp = new ArrayList<Integer>();
@@ -573,14 +601,16 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             }
         }
 
-        if(moves<1){
+        if(moves<1){ // out of moves
             canMove=false;
             turnOver =true;
         }
-        System.out.println(currentRoom);
         updateMainFrame();
     }
 
+    /**
+     * Rolls the dice, and updates the dice images
+     */
     public void roll(){
         int roll1 = (int) Math.ceil(Math.random() * 6);
         int roll2 = (int) Math.ceil(Math.random() * 6);
@@ -607,11 +637,12 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     }
 
+    /**
+     * Updates the players hand of cards
+     */
     public void updateCards(){
-        System.out.println("Updating cards..");
         p2a = new JPanel();
         p2a.setLayout( new FlowLayout());
-        // p2a.setBorder(blackline);
         p2a.setPreferredSize(new Dimension(700, BOARDHEIGHT/10));
         for(Card card : player.handList){ // draws the hand
             String name = card.getName().toLowerCase() + ".jpg";
@@ -621,12 +652,12 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     }
 
+    /**
+     * Updates the dice panel
+     */
     public void updateDice(){
-        System.out.println("Updating dices..");
         p2b = new JPanel();
         p2b.removeAll();
-      //  p2b.setLayout( new BoxLayout(p2b, BoxLayout.Y_AXIS));
-       // p2b.setBorder(blackline);
         p2b.setPreferredSize(new Dimension(BOARDWIDTH/4, BOARDHEIGHT/10));
 
         JLabel turnsLeft = new JLabel(player.getName()+" has " + moves +" turns left.");
@@ -634,11 +665,12 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         p2b.add(new JLabel(diceTwo), "East");
         p2b.add(turnsLeft,"South");
 
-        //p2b.revalidate();
-       // p2b.repaint();
         p2.add( p2b, "West");
     }
 
+    /**
+     * Creates the panel with the buttons on it
+     */
     public void createPanelOne(){
         p1 = new JPanel();
         p1.setLayout( new BoxLayout(p1, BoxLayout.Y_AXIS));
@@ -682,6 +714,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     }
 
     @Override
+    /**
+     * Registers when a key is pressed
+     */
     public void keyPressed(KeyEvent e) {
 
         int key = e.getKeyCode();
@@ -708,6 +743,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     }
 
     @Override
+    /**
+     * Registers when a key is typed.
+     */
     public void keyTyped(KeyEvent e) {
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
@@ -720,10 +758,16 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     }
 
     @Override
+    /**
+     * Registers when a key is released
+     */
     public void keyReleased(KeyEvent e) {
     }
 
     @Override
+    /**
+     * Registers when a button is pressed
+     */
     public void actionPerformed(ActionEvent e) {
 
         if(e.getSource() == roll){
@@ -839,6 +883,13 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     }
 
+    /**
+     * Checks to see if a player can move onto the tile
+     * @param current tile player is currently on
+     * @param x  x-coord of tile they want to move to
+     * @param y  y-coord of tile they want to move to
+     * @return true if can move on, false if can't
+     */
     public boolean checkTile(Tile current, int x, int y) {
         for(Tile t : tiles){
             if(y == t.getX() && x == t.getY()){
@@ -911,6 +962,11 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         return false;
     }
 
+    /**
+     * Finds what room the tile is
+     * @param value letter from text file
+     * @return room name
+     */
     public String whatRoomTile(String value){
         String text;
         if(value.equals("K")){  text = "kitchen"; } // kitchen
