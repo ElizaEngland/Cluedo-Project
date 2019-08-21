@@ -67,21 +67,21 @@ public class Tile {
         this.y = y;
     }
 
-    public String getRoomName() {
+    public String getRoomName(){
         return roomName;
     }
 
-    public Tile(ImageIcon image, boolean isRoom, boolean isHallway, boolean isDoor, boolean outOfBounds, int x, int y, String roomName) {
-        this.image = image;
-        this.isRoom = isRoom;
+    public Tile(ImageIcon i, boolean isRoom, boolean isHallway , boolean isDoor, boolean outOfBounds, int x, int y, String roomName){
+
+        this.image=i;
+        this.isRoom =isRoom;
         this.isHallway = isHallway;
         this.isDoor = isDoor;
         this.outOfBounds = outOfBounds;
-        this.x = x;
+        this.x =x;
         this.y = y;
-        this.roomName = roomName;
+        this.roomName =roomName;
     }
-
 
 
 }

@@ -270,21 +270,49 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         JLabel noOfPlayers = new JLabel("How many players: ");
-        noOfPlayers.setFont(new Font("Serif", Font.PLAIN, 24));
-        JTextField players = new JTextField(10);
+//        noOfPlayers.setFont(new Font("Serif", Font.PLAIN, 24));
+        JRadioButton amount3 = new JRadioButton("3");
+        JRadioButton amount4 = new JRadioButton("4");
+        JRadioButton amount5 = new JRadioButton("5");
+        JRadioButton amount6 = new JRadioButton("6");
+
         panel.add(noOfPlayers);
-        panel.add(players);
+        panel.add(amount3);
+        panel.add(amount4);
+        panel.add(amount5);
+        panel.add(amount6);
         JButton confirmNoOfPlayers = new JButton("Confirm");
         panel.add(confirmNoOfPlayers);
         frame1.add(panel);
 
 
+//        confirmNoOfPlayers.addActionListener(this);
+
         confirmNoOfPlayers.addActionListener( new ActionListener() {
                                                   public void actionPerformed(ActionEvent e)
                                                   {
+
                                                       frame1.setVisible(false);
-                                                      String stringNumOfPlayers = players.getText();
-                                                      playerAmount = Integer.parseInt(stringNumOfPlayers);
+                                                      if (amount3.isSelected()){
+                                                          playerAmount = Integer.parseInt(amount3.getText());
+                                                          System.out.println("3 pressed");
+                                                      }
+                                                      if (amount4.isSelected()){
+                                                          playerAmount = Integer.parseInt(amount4.getText());
+                                                          System.out.println("4 pressed");
+
+                                                      }
+                                                      if (amount5.isSelected()){
+                                                          playerAmount = Integer.parseInt(amount5.getText());
+                                                          System.out.println("5 pressed");
+
+                                                      }
+                                                      if (amount6.isSelected()){
+                                                          playerAmount = Integer.parseInt(amount6.getText());
+                                                          System.out.println("6 pressed");
+
+                                                      }
+//                      String stringNumOfPlayers = players.getText();
                                                       addPlayer();
                                                   }
                                               }
@@ -343,7 +371,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 
 
-        JLabel l = new JLabel("Make A Suggestion");
+        JLabel l = new JLabel("Make an Accusation");
         p.add(l);
         JLabel per = new JLabel("Choose a person:");
         p.add(per);
