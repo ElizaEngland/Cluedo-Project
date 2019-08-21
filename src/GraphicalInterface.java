@@ -528,6 +528,11 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         positions.put("peacockTile.jpg", Arrays.asList(23, 6));
     }
 
+    /**
+     * update the positions of the characters
+     * @param name
+     * @param direction
+     */
     public void updatePosition(String name, int direction){
         List<Integer> coords = positions.get(name);
         System.out.println("Updating positions..");
@@ -587,6 +592,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         updateMainFrame(player);
     }
 
+    /**
+     * dice roll
+     */
     public void roll(){
         int roll1 = (int) Math.ceil(Math.random() * 6);
         int roll2 = (int) Math.ceil(Math.random() * 6);
@@ -613,6 +621,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     }
 
+    /**
+     * updates the players cards images
+     */
     public void updateCards(){
         System.out.println("Updating cards..");
         p2a = new JPanel();
@@ -627,6 +638,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     }
 
+    /**
+     * updates the dice roll images
+     */
     public void updateDice(){
         System.out.println("Updating dices..");
         p2b = new JPanel();
@@ -645,6 +659,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         p2.add( p2b, "West");
     }
 
+    /**
+     * create the left side of the screen
+     */
     public void createPanelOne(){
         p1 = new JPanel();
         p1.setLayout( new BoxLayout(p1, BoxLayout.Y_AXIS));
@@ -681,6 +698,10 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         p1.add(accusation);
     }
 
+    /**
+     * records the key pressing for moving
+     * @param e
+     */
     @Override
     public void keyPressed(KeyEvent e) {
 
@@ -723,6 +744,10 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     public void keyReleased(KeyEvent e) {
     }
 
+    /**
+     * performs the action based on the event
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -742,13 +767,15 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         if(e.getSource() == confirmSuggestion){
             int count=0;
-
+            String selectedCharacter = "";
+            String selectedWeapon = "";
             Enumeration characterEle = characterGroup.getElements();
             Enumeration weaponEle = weaponGroup.getElements();
             while(characterEle.hasMoreElements()){
                 JRadioButton button = (JRadioButton)characterEle.nextElement();
                 if (button.isSelected()){
                     count++;
+                    selectedCharacter = button.getText();
                     System.out.println("selected: " + button.getText());
 
                 }
@@ -758,12 +785,14 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 JRadioButton button = (JRadioButton)weaponEle.nextElement();
                 if (button.isSelected()){
                     count++;
+                    selectedWeapon = button.getText();
                     System.out.println("selected: " + button.getText());
 
                 }
             }
 
             if(count==2) {
+                // send the suggestion
                 suggestionFrame.setVisible(false);
             }
 
@@ -775,10 +804,14 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             Enumeration characterEle = characterGroup.getElements();
             Enumeration weaponEle = weaponGroup.getElements();
             Enumeration roomEle = roomGroup.getElements();
+            String selectedCharacter = "";
+            String selectedWeapon = "";
+            String selectedRoom = "";
             while(characterEle.hasMoreElements()){
                 JRadioButton button = (JRadioButton)characterEle.nextElement();
                 if (button.isSelected()){
                     count++;
+                    selectedCharacter = button.getText();
                     System.out.println("selected: " + button.getText());
 
                 }
@@ -788,6 +821,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 JRadioButton button = (JRadioButton)weaponEle.nextElement();
                 if (button.isSelected()){
                     count++;
+                    selectedWeapon = button.getText();
                     System.out.println("selected: " + button.getText());
 
                 }
@@ -797,12 +831,15 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 JRadioButton button = (JRadioButton)roomEle.nextElement();
                 if (button.isSelected()){
                     count++;
+                    selectedRoom = button.getText();
+
                     System.out.println("selected: " + button.getText());
 
                 }
             }
 
             if(count==3) {
+                // send the accusation
                 accusationFrame.setVisible(false);
             }
 
@@ -811,6 +848,13 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     }
 
+    /**
+     * checks to see if the tile move is valid
+     * @param current
+     * @param x
+     * @param y
+     * @return boolean if move is valid or invalid
+     */
     public boolean checkTile(Tile current, int x, int y) {
         for(Tile t : tiles){
             if(y == t.getX() && x == t.getY()){
