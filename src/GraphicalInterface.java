@@ -40,16 +40,16 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     private int addPlayerCounter;
     private int playerAmount;
     private ButtonGroup buttonGroup = new ButtonGroup();
-    private ButtonGroup characterGroup = new ButtonGroup();
-    private ButtonGroup weaponGroup = new ButtonGroup();
-    private ButtonGroup roomGroup = new ButtonGroup();
+    ButtonGroup characterGroup = new ButtonGroup();
+    ButtonGroup weaponGroup = new ButtonGroup();
+    ButtonGroup roomGroup = new ButtonGroup();
     private ArrayList<JRadioButton> charButtons;
     public cluedoMain cluedoMainGame;
 
     boolean canMove = false;
-    private JFrame mainFrame;
-    private JFrame suggestionFrame;
-    private JFrame accusationFrame;
+    public JFrame mainFrame;
+    public JFrame suggestionFrame;
+    public JFrame accusationFrame;
     private JPanel p1;
     private JPanel p2;
     private JPanel p2a;
@@ -57,20 +57,21 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     private JPanel p3;
     private ImageIcon[][] grid;
     private JLabel playerName;
-    private String playerTileName = "plumTile.jpg";
+    private String playerTileName;
     JButton roll;
     JButton suggestion;
     JButton accusation;
     JButton confirm;
     JButton confirmSuggestion;
     JButton confirmAccusation;
+    JButton nextTurn;
     Player player;
     Tile currentTile;
     String typeOfTile;
     boolean inRoom =false;
     String currentRoom;
-    Card revealCard;
-//    Player currentPlayer= null;
+    boolean playersTurn;
+    boolean turnOver;
 
 
 
@@ -111,16 +112,31 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         this.cluedoMainGame = cluedoMainGame;
         howMany();
-//        List<Card> s = Arrays.asList(new Card("Plum"), new Card("Mustard"));
-//        selectCard(s);
 
     }
 
-    public void updateMainFrame(Player player){
-
-        //System.out.println("HERE");
+    public void playerTurn(Player player, boolean playersTurn){
+        turnOver=false;
+        this.playersTurn = playersTurn;
         this.player = player;
-        playerName = new JLabel(player.getName() + " turn");
+
+
+        String charac = player.getCharacter();
+        playerTileName = charac.toLowerCase() + "Tile.jpg";
+
+        roll.setVisible(true);
+        suggestion.setVisible(true);
+        accusation.setVisible(true);
+        updateMainFrame();
+
+    }
+
+    public void updateMainFrame(){
+
+        String name = player.getName();
+        String charac = player.getCharacter();
+        playerName = new JLabel(name + " turn");
+        playerTileName = charac.toLowerCase() + "Tile.jpg";
 
         mainFrame.getContentPane().removeAll();
 
@@ -155,6 +171,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         Border blackline = BorderFactory.createLineBorder(Color.black);
         addKeyListener(this);
 
+        String charac = player.getCharacter();
+        playerTileName = charac.toLowerCase() + "Tile.jpg";
+
         //menu
         JMenuBar menuBar = new JMenuBar();
         JMenu menu  = new JMenu("File");
@@ -166,7 +185,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         mainFrame.setJMenuBar(menuBar);
 
         // column
-        createPanelOne();
+       createPanelOne();
 
 
         // bottom
@@ -181,7 +200,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         roll();
         moves=0;
         updateDice();
-
 
         // graph
         updateStartPositions();
@@ -230,36 +248,36 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         frame2.add(panel);
 
         confirm.addActionListener( new ActionListener() {
-                                       public void actionPerformed(ActionEvent e)
-                                       {
-                                           String selectedName="";
-                                           Enumeration elements = buttonGroup.getElements();
-                                           AbstractButton a=null;
-                                           while(elements.hasMoreElements()){
-                                               JRadioButton button = (JRadioButton)elements.nextElement();
-                                               if (button.isSelected()){
-                                                   selectedName = button.getText();
-                                                   System.out.println(selectedName);
-                                                   a = button;
-                                                   System.out.println("selected: " + button.getText());
+           public void actionPerformed(ActionEvent e)
+           {
+               String selectedName="";
+               Enumeration elements = buttonGroup.getElements();
+               AbstractButton a=null;
+               while(elements.hasMoreElements()){
+                   JRadioButton button = (JRadioButton)elements.nextElement();
+                   if (button.isSelected()){
+                       selectedName = button.getText();
+                       System.out.println(selectedName);
+                       a = button;
+                       System.out.println("selected: " + button.getText());
 
-                                               }
-                                           }
-                                           buttonGroup.remove(a);
-                                           buttonGroup.clearSelection();
-                                           addPlayerCounter+=1;
-                                           cluedoMainGame.addPlayerGUI(enterPlayerName.getText(), selectedName, 0,0,null,null,null,null );
+                   }
+               }
+               buttonGroup.remove(a);
+               buttonGroup.clearSelection();
+               addPlayerCounter+=1;
+               cluedoMainGame.addPlayerGUI(enterPlayerName.getText(), selectedName, 0,0,null,null,null,null );
 
-                                           if (cluedoMainGame.players.size() < playerAmount) {
-                                               frame2.setVisible(false);
-                                               addPlayer();
-                                           }
-                                           else{
-                                               frame2.setVisible(false);
-                                               cluedoMainGame.newGame();
-                                           }
-                                       }
-                                   }
+               if (cluedoMainGame.players.size() < playerAmount) {
+                   frame2.setVisible(false);
+                   addPlayer();
+               }
+               else{
+                   frame2.setVisible(false);
+                   cluedoMainGame.newGame();
+               }
+           }
+       }
         );
 
         frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -274,52 +292,24 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         JLabel noOfPlayers = new JLabel("How many players: ");
-//        noOfPlayers.setFont(new Font("Serif", Font.PLAIN, 24));
-        JRadioButton amount3 = new JRadioButton("3");
-        JRadioButton amount4 = new JRadioButton("4");
-        JRadioButton amount5 = new JRadioButton("5");
-        JRadioButton amount6 = new JRadioButton("6");
-
+        noOfPlayers.setFont(new Font("Serif", Font.PLAIN, 24));
+        JTextField players = new JTextField(10);
         panel.add(noOfPlayers);
-        panel.add(amount3);
-        panel.add(amount4);
-        panel.add(amount5);
-        panel.add(amount6);
+        panel.add(players);
         JButton confirmNoOfPlayers = new JButton("Confirm");
         panel.add(confirmNoOfPlayers);
         frame1.add(panel);
 
 
-//        confirmNoOfPlayers.addActionListener(this);
-
         confirmNoOfPlayers.addActionListener( new ActionListener() {
-                                                  public void actionPerformed(ActionEvent e)
-                                                  {
-
-                                                      frame1.setVisible(false);
-                                                      if (amount3.isSelected()){
-                                                          playerAmount = Integer.parseInt(amount3.getText());
-                                                          System.out.println("3 pressed");
-                                                      }
-                                                      if (amount4.isSelected()){
-                                                          playerAmount = Integer.parseInt(amount4.getText());
-                                                          System.out.println("4 pressed");
-
-                                                      }
-                                                      if (amount5.isSelected()){
-                                                          playerAmount = Integer.parseInt(amount5.getText());
-                                                          System.out.println("5 pressed");
-
-                                                      }
-                                                      if (amount6.isSelected()){
-                                                          playerAmount = Integer.parseInt(amount6.getText());
-                                                          System.out.println("6 pressed");
-
-                                                      }
-//                      String stringNumOfPlayers = players.getText();
-                                                      addPlayer();
-                                                  }
-                                              }
+              public void actionPerformed(ActionEvent e)
+              {
+                  frame1.setVisible(false);
+                  String stringNumOfPlayers = players.getText();
+                  playerAmount = Integer.parseInt(stringNumOfPlayers);
+                  addPlayer();
+              }
+          }
         );
 
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -357,7 +347,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         JLabel room = new JLabel("In the "+ currentRoom);
         p.add(room);
 
-
         confirmSuggestion = new JButton("Confirm");
         confirmSuggestion.addActionListener(this);
         p.add(confirmSuggestion);
@@ -375,7 +364,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 
 
-        JLabel l = new JLabel("Make an Accusation");
+        JLabel l = new JLabel("Make A Suggestion");
         p.add(l);
         JLabel per = new JLabel("Choose a person:");
         p.add(per);
@@ -461,7 +450,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     public void addTile(){
         try {
-            FileReader fr = new FileReader("src/boardmapGUI.txt");
+            FileReader fr = new FileReader("boardmapGUI.txt");
             BufferedReader dataReader = new BufferedReader(fr);
             tiles = new ArrayList<Tile>();
             String currentLine;
@@ -532,11 +521,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         positions.put("peacockTile.jpg", Arrays.asList(23, 6));
     }
 
-    /**
-     * update the positions of the characters
-     * @param name
-     * @param direction
-     */
     public void updatePosition(String name, int direction){
         List<Integer> coords = positions.get(name);
         System.out.println("Updating positions..");
@@ -591,14 +575,12 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         if(moves<1){
             canMove=false;
+            turnOver =true;
         }
         System.out.println(currentRoom);
-        updateMainFrame(player);
+        updateMainFrame();
     }
 
-    /**
-     * dice roll
-     */
     public void roll(){
         int roll1 = (int) Math.ceil(Math.random() * 6);
         int roll2 = (int) Math.ceil(Math.random() * 6);
@@ -625,9 +607,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     }
 
-    /**
-     * updates the players cards images
-     */
     public void updateCards(){
         System.out.println("Updating cards..");
         p2a = new JPanel();
@@ -642,15 +621,12 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     }
 
-    /**
-     * updates the dice roll images
-     */
     public void updateDice(){
         System.out.println("Updating dices..");
         p2b = new JPanel();
         p2b.removeAll();
-        //  p2b.setLayout( new BoxLayout(p2b, BoxLayout.Y_AXIS));
-        // p2b.setBorder(blackline);
+      //  p2b.setLayout( new BoxLayout(p2b, BoxLayout.Y_AXIS));
+       // p2b.setBorder(blackline);
         p2b.setPreferredSize(new Dimension(BOARDWIDTH/4, BOARDHEIGHT/10));
 
         JLabel turnsLeft = new JLabel(player.getName()+" has " + moves +" turns left.");
@@ -659,13 +635,10 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         p2b.add(turnsLeft,"South");
 
         //p2b.revalidate();
-        // p2b.repaint();
+       // p2b.repaint();
         p2.add( p2b, "West");
     }
 
-    /**
-     * create the left side of the screen
-     */
     public void createPanelOne(){
         p1 = new JPanel();
         p1.setLayout( new BoxLayout(p1, BoxLayout.Y_AXIS));
@@ -696,16 +669,18 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         accusation.setFocusable(false);
         accusation.addActionListener(this);
 
+        nextTurn = new JButton("NEXT TURN");
+        nextTurn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nextTurn.setFocusable(false);
+        nextTurn.addActionListener(this);
+
         p1.add(playerName);
         p1.add(roll);
         p1.add(suggestion);
         p1.add(accusation);
+        p1.add(nextTurn);
     }
 
-    /**
-     * records the key pressing for moving
-     * @param e
-     */
     @Override
     public void keyPressed(KeyEvent e) {
 
@@ -748,38 +723,44 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     public void keyReleased(KeyEvent e) {
     }
 
-    /**
-     * performs the action based on the event
-     * @param e
-     */
     @Override
     public void actionPerformed(ActionEvent e) {
 
         if(e.getSource() == roll){
             roll();
-            updateMainFrame(player);
+            roll.setVisible(false);
+            updateMainFrame();
             canMove = true;
         }
 
         if(e.getSource() == suggestion){
             makeSuggestion();
+            roll.setVisible(false);
+            suggestion.setVisible(false);
+            accusation.setVisible(false);
+            updateMainFrame();
+            turnOver =true;
+
         }
 
         if(e.getSource() == accusation){
             makeAccusation();
+            roll.setVisible(false);
+            suggestion.setVisible(false);
+            accusation.setVisible(false);
+            updateMainFrame();
+            turnOver = true ;
         }
 
         if(e.getSource() == confirmSuggestion){
             int count=0;
-            String selectedCharacter = "";
-            String selectedWeapon = "";
+
             Enumeration characterEle = characterGroup.getElements();
             Enumeration weaponEle = weaponGroup.getElements();
             while(characterEle.hasMoreElements()){
                 JRadioButton button = (JRadioButton)characterEle.nextElement();
                 if (button.isSelected()){
                     count++;
-                    selectedCharacter = button.getText();
                     System.out.println("selected: " + button.getText());
 
                 }
@@ -789,15 +770,12 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 JRadioButton button = (JRadioButton)weaponEle.nextElement();
                 if (button.isSelected()){
                     count++;
-                    selectedWeapon = button.getText();
                     System.out.println("selected: " + button.getText());
 
                 }
             }
 
             if(count==2) {
-                // send the suggestion
-                player.suggestionMadeGUI(selectedWeapon, selectedCharacter, currentRoom, playerAmount);
                 suggestionFrame.setVisible(false);
             }
 
@@ -809,14 +787,10 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             Enumeration characterEle = characterGroup.getElements();
             Enumeration weaponEle = weaponGroup.getElements();
             Enumeration roomEle = roomGroup.getElements();
-            String selectedCharacter = "";
-            String selectedWeapon = "";
-            String selectedRoom = "";
             while(characterEle.hasMoreElements()){
                 JRadioButton button = (JRadioButton)characterEle.nextElement();
                 if (button.isSelected()){
                     count++;
-                    selectedCharacter = button.getText();
                     System.out.println("selected: " + button.getText());
 
                 }
@@ -826,7 +800,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 JRadioButton button = (JRadioButton)weaponEle.nextElement();
                 if (button.isSelected()){
                     count++;
-                    selectedWeapon = button.getText();
                     System.out.println("selected: " + button.getText());
 
                 }
@@ -836,115 +809,36 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 JRadioButton button = (JRadioButton)roomEle.nextElement();
                 if (button.isSelected()){
                     count++;
-                    selectedRoom = button.getText();
-
                     System.out.println("selected: " + button.getText());
 
                 }
             }
 
             if(count==3) {
-                // send the accusation
                 accusationFrame.setVisible(false);
             }
 
         }
 
+        if(e.getSource() == nextTurn){
+            int index=0;
+            for(Player p : cluedoMainGame.players){
+                if(p.getName().equals(player.getName())){
+                    index=cluedoMainGame.players.indexOf(p);
+                    System.out.println(index);
 
-    }
-
-    public void selectCard(List<Card>cardsThatMatch){
-        JRadioButton button0 = new JRadioButton(" ");
-        JRadioButton button1 = new JRadioButton("");
-        JRadioButton button2 = new JRadioButton(" ");
-        JRadioButton button3 = new JRadioButton(" ");
-        JRadioButton button4 = new JRadioButton(" ");
-        JRadioButton button5 = new JRadioButton(" ");
-
-        List<JRadioButton> cardButtons = Arrays.asList(button0, button1, button2, button3, button4, button5);
-
-        JFrame frame1 = new JFrame();
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        JLabel panelLabel = new JLabel("Choose the card to reveal");
-        panel.add(panelLabel);
-        int count = 0;
-        for (Card c : cardsThatMatch){
-            // set the text for each of the buttons to the cards
-            cardButtons.get(count).setText(c.getName());
-            panel.add(cardButtons.get(count));
-            count+=1;
-        }
-        JButton confirmNoOfPlayers = new JButton("Confirm");
-        panel.add(confirmNoOfPlayers);
-
-        confirmNoOfPlayers.addActionListener( new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                frame1.setVisible(false);
-                int c1 = 0;
-                for (Card c : cardsThatMatch){
-                    if (cardButtons.get(c1).isSelected()){
-                        revealCard = c;
-                        printOnScreen();
-                    }
-                    c1+=1;
+                    if(index+1>=cluedoMainGame.players.size()){
+                        index=0;
+                        System.out.println(index);
+                    }else{index++;}
                 }
             }
-        });
+            playerTurn(cluedoMainGame.players.get(index),true);
+        }
 
-        frame1.add(panel);
 
-        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame1.setSize(500, 200);
-        frame1.setVisible(true);
     }
 
-    public void printOnScreen(){
-
-        JFrame frame1 = new JFrame();
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        JLabel panelLabel = new JLabel("Card revealed: ");
-        panel.add(panelLabel);
-        BufferedImage pic;
-//        try {
-//             pic = ImageIO.read(new File("images/" + revealCard +".jpg"));
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        ImageIcon i = drawHand(revealCard +".jpg");
-//        panel.add(new JLabel(i));
-
-
-        JLabel lab = new JLabel(revealCard.getName() + "");
-        panel.add(lab);
-        JButton continueButton = new JButton("Continue");
-        panel.add(continueButton);
-
-        continueButton.addActionListener( new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                frame1.setVisible(false);
-
-            }
-        });
-
-        frame1.add(panel);
-
-        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame1.setSize(500, 200);
-        frame1.setVisible(true);
-    }
-    /**
-     * checks to see if the tile move is valid
-     * @param current
-     * @param x
-     * @param y
-     * @return boolean if move is valid or invalid
-     */
     public boolean checkTile(Tile current, int x, int y) {
         for(Tile t : tiles){
             if(y == t.getX() && x == t.getY()){
@@ -1031,6 +925,32 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         else{ text = "cellar"; } //cellar
 
         return text;
+    }
+
+    public void youWin() {
+        JFrame winFrame = new JFrame();
+        JPanel winPanel = new JPanel();
+        JLabel winning = new JLabel(player.getName() + " won the game!");
+        JButton endGame = new JButton("Game Over");
+        winPanel.add(winning);
+        winPanel.add(endGame);
+        winFrame.add(winPanel);
+        winFrame.setSize(100, 100);
+        winFrame.setVisible(true);
+        winFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public void youAreOut(){
+        JFrame loseFrame = new JFrame();
+        JPanel losePanel = new JPanel();
+        JLabel losing = new JLabel(player.getName() + " guessed incorrectly!");
+        JButton lost = new JButton("Ok");
+        losePanel.add(losing);
+        losePanel.add(lost);
+        loseFrame.add(losePanel);
+        loseFrame.setSize(100, 100);
+        loseFrame.setVisible(true);
+        loseFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
 }
