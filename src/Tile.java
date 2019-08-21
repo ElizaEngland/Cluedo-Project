@@ -9,6 +9,7 @@ public class Tile {
     public boolean outOfBounds;
     public int x;
     public int y;
+    public String roomName;
 
     public ImageIcon getImage() {
         return image;
@@ -66,16 +67,21 @@ public class Tile {
         this.y = y;
     }
 
-    public Tile(ImageIcon i, boolean isRoom, boolean isHallway , boolean isDoor, boolean outOfBounds, int x, int y){
+    public String getRoomName() {
+        return roomName;
+    }
 
-        this.image=i;
-        this.isRoom =isRoom;
+    public Tile(ImageIcon image, boolean isRoom, boolean isHallway, boolean isDoor, boolean outOfBounds, int x, int y, String roomName) {
+        this.image = image;
+        this.isRoom = isRoom;
         this.isHallway = isHallway;
         this.isDoor = isDoor;
         this.outOfBounds = outOfBounds;
-        this.x =x;
+        this.x = x;
         this.y = y;
+        this.roomName = roomName;
     }
+
 
 
 }
