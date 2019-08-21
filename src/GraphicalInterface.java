@@ -794,7 +794,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
             if(count==2) {
                 // send the suggestion
-                player.suggestionMadeGUI(selectedWeapon, selectedCharacter, currentRoom, playerAmount);
+//                player.suggestionMadeGUI(selectedWeapon, selectedCharacter, currentRoom, playerAmount);
                 suggestionFrame.setVisible(false);
             }
 
