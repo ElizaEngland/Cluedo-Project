@@ -834,4 +834,6 @@ class Player {
     public String getCharacter() {
         return character;
     }
+    
+    public String getCharacter(){return character;}
 }
