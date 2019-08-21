@@ -76,6 +76,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
 
 
+    String currentRoom;
 
 
 
@@ -194,8 +195,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
      */
     public void updateMainFrame(Player player){
 
-        this.player = player; // current player
-        playerName = new JLabel(player.getName() + " (" + player.getCharacter() + ") turn");
+        //System.out.println("HERE");
+        this.player = player;
+        playerName = new JLabel(player.getName() + " turn");
 
         mainFrame.getContentPane().removeAll();
 
@@ -245,7 +247,8 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         mainFrame.setJMenuBar(menuBar);
 
         // column
-        createPanelOne();
+       createPanelOne();
+
 
         // bottom
         p2= new JPanel();
@@ -296,6 +299,8 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         panel.add(player);
         panel.add(enterPlayerName);
         panel.add(tokenName);
+        String selectedName = "";
+//		final String fstring = "";
 
         // adds all of the buttons onto the panel
         Enumeration elements = buttonGroup.getElements();
@@ -323,25 +328,23 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                            a = button;
 //                           System.out.println("selected: " + button.getText());
 
-                       }
-                   }
-                   buttonGroup.remove(a);
-                   buttonGroup.clearSelection();
-                   addPlayerCounter+=1;
-                   cluedoMainGame.addPlayerGUI(enterPlayerName.getText(), selectedName, 0,0,null,null,null,null );
-
-                   // add more players
-                   if (cluedoMainGame.players.size() < playerAmount) {
-                       frame2.setVisible(false);
-                       addPlayer();
-                   }
-                   // finish
-                   else{
-                       frame2.setVisible(false);
-                       cluedoMainGame.newGame();
                    }
                }
+               buttonGroup.remove(a);
+               buttonGroup.clearSelection();
+               addPlayerCounter+=1;
+               cluedoMainGame.addPlayerGUI(enterPlayerName.getText(), selectedName, 0,0,null,null,null,null );
+
+               if (cluedoMainGame.players.size() < playerAmount) {
+                   frame2.setVisible(false);
+                   addPlayer();
+               }
+               else{
+                   frame2.setVisible(false);
+                   cluedoMainGame.newGame();
+               }
            }
+       }
         );
 
         frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -374,8 +377,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         panel.add(confirmNoOfPlayers);
         frame1.add(panel);
 
-
-//        confirmNoOfPlayers.addActionListener(this);
 
         confirmNoOfPlayers.addActionListener( new ActionListener() {
                   public void actionPerformed(ActionEvent e)
@@ -444,9 +445,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             p.add(button);
         }
 
-        // TO DO
-        JLabel room = new JLabel("Your room u are in goes here!");
+        JLabel room = new JLabel("In the "+ currentRoom);
         p.add(room);
+
 
         confirmSuggestion = new JButton("Confirm");
         confirmSuggestion.addActionListener(this);
@@ -516,13 +517,13 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     public ImageIcon drawHand(String imgName){
         BufferedImage lhimg = null;
         try {
-            System.out.println("images/" +imgName);
-            lhimg = ImageIO.read(new File("images/" +imgName));
+            lhimg = ImageIO.read(new File("images/" +imgName +""));
         } catch (IOException e) {
             e.printStackTrace();
         }
         Image limg = lhimg.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
         ImageIcon imaglIcon = new ImageIcon(limg);
+
 
         return imaglIcon;
     }
@@ -535,7 +536,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     public ImageIcon resize(String imgName){
         BufferedImage img = null;
         try {
-            System.out.println("resizing images" +imgName +"");
             img = ImageIO.read(new File("images/" +imgName +""));
         } catch (IOException e) {
             e.printStackTrace();
@@ -591,6 +591,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                     int col = Integer.parseInt(loadArray[1]); // col position
                     int row = Integer.parseInt(loadArray[2]); // row position
 
+                    String roomName =null;
                     boolean done =false;
                     for(String txt : positions.keySet()){
                         List<Integer> s = positions.get(txt);
@@ -599,7 +600,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
                         if(row==y && col==x){
                             ImageIcon r = resize(txt);
-                            Tile newTile = new Tile(r,false,false,false,false,row,col);
+                            Tile newTile = new Tile(r,false,false,false,false,row,col,roomName);
                             tiles.add(newTile);
                             done=true;
                         }
@@ -608,19 +609,19 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                     if(!done) {
                         if (value.equals("x")) { // if a room
                             ImageIcon r = resize("outOfBoundsTile.jpg");
-                            Tile newTile = new Tile(r, false, false, false, true, row, col);
+                            Tile newTile = new Tile(r, false, false, false, true, row, col,roomName);
                             tiles.add(newTile);
                         } else if (value.equals("h")) {
                             ImageIcon r = resize("hallwayTile.jpg");
-                            Tile newTile = new Tile(r, false, true, false, false, row, col);
+                            Tile newTile = new Tile(r, false, true, false, false, row, col,roomName);
                             tiles.add(newTile);
                         } else if (value.equals("D")) {
                             ImageIcon r = resize("doorTile.jpg");
-                            Tile newTile = new Tile(r, false, false, true, false, row, col);
+                            Tile newTile = new Tile(r, false, false, true, false, row, col,roomName);
                             tiles.add(newTile);
                         } else {
                             ImageIcon r = resize("roomTile.jpg");
-                            Tile newTile = new Tile(r, true, false, false, false, row, col);
+                            Tile newTile = new Tile(r, true, false, false, false, row, col,roomName);
                             tiles.add(newTile);
                         }
                     }
@@ -661,8 +662,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     public void updatePosition(String name, int direction){
         List<Integer> coords = positions.get(name);
         System.out.println("Updating positions..");
-        System.out.println("MOVING " + name);
-        System.out.println(coords.get(0) + " " + coords.get(1));
         int x = coords.get(0);
         int y = coords.get(1);
         List<Integer> temp = new ArrayList<Integer>();
@@ -715,7 +714,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         if(moves<1){
             canMove=false;
         }
-
+        System.out.println(currentRoom);
         updateMainFrame(player);
     }
 
@@ -772,8 +771,8 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         System.out.println("Updating dices..");
         p2b = new JPanel();
         p2b.removeAll();
-        //  p2b.setLayout( new BoxLayout(p2b, BoxLayout.Y_AXIS));
-        // p2b.setBorder(blackline);
+      //  p2b.setLayout( new BoxLayout(p2b, BoxLayout.Y_AXIS));
+       // p2b.setBorder(blackline);
         p2b.setPreferredSize(new Dimension(BOARDWIDTH/4, BOARDHEIGHT/10));
 
         JLabel turnsLeft = new JLabel(player.getName()+" has " + moves +" turns left.");
@@ -782,7 +781,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         p2b.add(turnsLeft,"South");
 
         //p2b.revalidate();
-        // p2b.repaint();
+       // p2b.repaint();
         p2.add( p2b, "West");
     }
 
@@ -807,23 +806,21 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         suggestion.setFocusable(false);
         suggestion.setAlignmentX(Component.CENTER_ALIGNMENT);
         suggestion.addActionListener(this);
+        if(inRoom){
+            suggestion.setVisible(true);
+        }else{
+            suggestion.setVisible(false);
+        }
 
         accusation = new JButton("ACCUSATION");
         accusation.setAlignmentX(Component.CENTER_ALIGNMENT);
         accusation.setFocusable(false);
         accusation.addActionListener(this);
 
-        nextPlayer = new JButton("NEXT PLAYER");
-        nextPlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
-        nextPlayer.setFocusable(false);
-        nextPlayer.addActionListener(this);
-
-
         p1.add(playerName);
         p1.add(roll);
         p1.add(suggestion);
         p1.add(accusation);
-        p1.add(nextPlayer);
     }
 
     /**
@@ -995,11 +992,13 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
                 if(inRoom){
                     if(t.isDoor()){
+                        currentRoom = t.getRoomName();
                         inRoom = false;
                         typeOfTile = "exit door";
                         return true;
                     }
                     else if(t.isRoom()){
+                        currentRoom = t.getRoomName();
                         typeOfTile = "room";
                         return true;
                     }
@@ -1019,7 +1018,8 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
                 }
                 else{
-                    if(t.isRoom() && typeOfTile.equals("door")){
+                    if(t.isRoom() && typeOfTile.equals("door")){ // entering room through door
+                        currentRoom = t.getRoomName();
                         inRoom=true;
                         return true;
                     }
@@ -1030,6 +1030,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                         return false;
                     }
                     else if(t.isDoor()){
+                        currentRoom = t.getRoomName();
                         typeOfTile = "door";
                         System.out.println("is door");
                         return true;
@@ -1040,6 +1041,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                         return false;
                     }
                     else if(t.isHallway()){
+                        currentRoom = t.getRoomName();
                         System.out.println("hallway");
                         return true;
                     }
@@ -1056,6 +1058,21 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         return false;
     }
 
+    public String whatRoomTile(String value){
+        String text;
+        if(value.equals("K")){  text = "kitchen"; } // kitchen
+        else if(value.equals("B")){text = "ballroom";} // ballroom
+        else if (value.equals("C")){text = "conservatory";}//conservatory
+        else if(value.equals("N")){ text = "dining";}//dining room
+        else if(value.equals("O")){text = "lounge";}//lounge
+        else if(value.equals("H")){ text = "hall";} //hall
+        else if(value.equals("S")){ text = "study";}// study
+        else if(value.equals("L")){ text = "library";}// library
+        else if(value.equals("I")){text = "billiard";}// billiard
+        else{ text = "cellar"; } //cellar
+
+        return text;
+    }
 
 }
 
