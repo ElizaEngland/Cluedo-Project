@@ -435,16 +435,16 @@ class Player {
         }
     }
 
-    /**
-     * Creates a suggestion turn
-     *
-     * @param sc           This is a scanner used for user input
-     * @param currentboard This is the current board
-     * @param player       This is the current player
-     * @param players      This is the list of all of the current players
-     * @param allPlayers   This is the list of all of the players - including the eliminated players
-     * @return Nothing to return
-     */
+//    /**
+//     * Creates a suggestion turn
+//     *
+//     * @param sc           This is a scanner used for user input
+//     * @param currentboard This is the current board
+//     * @param player       This is the current player
+//     * @param players      This is the list of all of the current players
+//     * @param allPlayers   This is the list of all of the players - including the eliminated players
+//     * @return Nothing to return
+//     */
     public void suggestionMadeGUI(String selectedWeapon, String selectedCharacter, String currentRoom, int playerAmount) {
         // new cards
         Card weapon = new Card(selectedWeapon);
@@ -775,7 +775,7 @@ class Player {
             return true;
         } else { // more than one matching card
             String text = " choose between ";
-            gui.selectCard(cardsThatMatch);
+//            gui.selectCard(cardsThatMatch);
 
             for (Card card : cardsThatMatch) {
                 text += (card.getName() + ", ");
