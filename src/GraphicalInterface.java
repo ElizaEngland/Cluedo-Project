@@ -69,6 +69,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     String typeOfTile;
     boolean inRoom =false;
     String currentRoom;
+    Card revealCard;
 //    Player currentPlayer= null;
 
 
@@ -110,6 +111,8 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         this.cluedoMainGame = cluedoMainGame;
         howMany();
+//        List<Card> s = Arrays.asList(new Card("Plum"), new Card("Mustard"));
+//        selectCard(s);
 
     }
 
@@ -458,7 +461,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     public void addTile(){
         try {
-            FileReader fr = new FileReader("boardmapGUI.txt");
+            FileReader fr = new FileReader("src/boardmapGUI.txt");
             BufferedReader dataReader = new BufferedReader(fr);
             tiles = new ArrayList<Tile>();
             String currentLine;
@@ -794,7 +797,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
             if(count==2) {
                 // send the suggestion
-//                player.suggestionMadeGUI(selectedWeapon, selectedCharacter, currentRoom, playerAmount);
+                player.suggestionMadeGUI(selectedWeapon, selectedCharacter, currentRoom, playerAmount);
                 suggestionFrame.setVisible(false);
             }
 
@@ -850,70 +853,91 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
     }
 
-//    public void selectCard(List<Card>cardsThatMatch){
-//        JFrame frame1 = new JFrame();
-//        JPanel panel = new JPanel();
-//        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//        int count =0;
-//        for (Card c : cardsThatMatch){
-//            String name = "card"+count;
-//            JRadioButton name = new JRadioButton("3");
+    public void selectCard(List<Card>cardsThatMatch){
+        JRadioButton button0 = new JRadioButton(" ");
+        JRadioButton button1 = new JRadioButton("");
+        JRadioButton button2 = new JRadioButton(" ");
+        JRadioButton button3 = new JRadioButton(" ");
+        JRadioButton button4 = new JRadioButton(" ");
+        JRadioButton button5 = new JRadioButton(" ");
+
+        List<JRadioButton> cardButtons = Arrays.asList(button0, button1, button2, button3, button4, button5);
+
+        JFrame frame1 = new JFrame();
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JLabel panelLabel = new JLabel("Choose the card to reveal");
+        panel.add(panelLabel);
+        int count = 0;
+        for (Card c : cardsThatMatch){
+            // set the text for each of the buttons to the cards
+            cardButtons.get(count).setText(c.getName());
+            panel.add(cardButtons.get(count));
+            count+=1;
+        }
+        JButton confirmNoOfPlayers = new JButton("Confirm");
+        panel.add(confirmNoOfPlayers);
+
+        confirmNoOfPlayers.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                frame1.setVisible(false);
+                int c1 = 0;
+                for (Card c : cardsThatMatch){
+                    if (cardButtons.get(c1).isSelected()){
+                        revealCard = c;
+                        printOnScreen();
+                    }
+                    c1+=1;
+                }
+            }
+        });
+
+        frame1.add(panel);
+
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame1.setSize(500, 200);
+        frame1.setVisible(true);
+    }
+
+    public void printOnScreen(){
+
+        JFrame frame1 = new JFrame();
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JLabel panelLabel = new JLabel("Card revealed: ");
+        panel.add(panelLabel);
+        BufferedImage pic;
+//        try {
+//             pic = ImageIO.read(new File("images/" + revealCard +".jpg"));
 //
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
 //
-////        noOfPlayers.setFont(new Font("Serif", Font.PLAIN, 24));
-//        JRadioButton amount3 = new JRadioButton("3");
-//        JRadioButton amount4 = new JRadioButton("4");
-//        JRadioButton amount5 = new JRadioButton("5");
-//        JRadioButton amount6 = new JRadioButton("6");
-//
-//        panel.add(noOfPlayers);
-//        panel.add(amount3);
-//        panel.add(amount4);
-//        panel.add(amount5);
-//        panel.add(amount6);
-//        JButton confirmNoOfPlayers = new JButton("Confirm");
-//        panel.add(confirmNoOfPlayers);
-//        frame1.add(panel);
-//
-//
-////        confirmNoOfPlayers.addActionListener(this);
-//
-//        confirmNoOfPlayers.addActionListener( new ActionListener() {
-//          public void actionPerformed(ActionEvent e)
-//          {
-//
-//              frame1.setVisible(false);
-//              if (amount3.isSelected()){
-//                  playerAmount = Integer.parseInt(amount3.getText());
-//                  System.out.println("3 pressed");
-//              }
-//              if (amount4.isSelected()){
-//                  playerAmount = Integer.parseInt(amount4.getText());
-//                  System.out.println("4 pressed");
-//
-//              }
-//              if (amount5.isSelected()){
-//                  playerAmount = Integer.parseInt(amount5.getText());
-//                  System.out.println("5 pressed");
-//
-//              }
-//              if (amount6.isSelected()){
-//                  playerAmount = Integer.parseInt(amount6.getText());
-//                  System.out.println("6 pressed");
-//
-//              }
-////                      String stringNumOfPlayers = players.getText();
-//              addPlayer();
-//          }
-//      }
-//        );
-//
-//        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame1.setSize(500, 200);
-//        frame1.setVisible(true);
-//    }
+//        ImageIcon i = drawHand(revealCard +".jpg");
+//        panel.add(new JLabel(i));
 
+
+        JLabel lab = new JLabel(revealCard.getName() + "");
+        panel.add(lab);
+        JButton continueButton = new JButton("Continue");
+        panel.add(continueButton);
+
+        continueButton.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                frame1.setVisible(false);
+
+            }
+        });
+
+        frame1.add(panel);
+
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame1.setSize(500, 200);
+        frame1.setVisible(true);
+    }
     /**
      * checks to see if the tile move is valid
      * @param current
