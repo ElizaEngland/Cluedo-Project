@@ -31,6 +31,8 @@ class Player {
     String previousTile;
     boolean onDoor;
     HashSet<String> pastCords;
+    List<Player> allPlayers1;
+    GraphicalInterface gui;
 
     /**
      * Creates a player in the game
@@ -59,6 +61,14 @@ class Player {
         this.weaponCards = weaponCards;
         this.roomCards = roomCards;
         this.winningCards = winningCards;
+    }
+
+    public void setGui(GraphicalInterface gui) {
+        this.gui = gui;
+    }
+
+    public void setAllPlayers1(ArrayList<Player> allPlayers1) {
+        this.allPlayers1 = allPlayers1;
     }
 
     /**
@@ -426,6 +436,46 @@ class Player {
     }
 
     /**
+     * Creates a suggestion turn
+     *
+     * @param sc           This is a scanner used for user input
+     * @param currentboard This is the current board
+     * @param player       This is the current player
+     * @param players      This is the list of all of the current players
+     * @param allPlayers   This is the list of all of the players - including the eliminated players
+     * @return Nothing to return
+     */
+//    public void suggestionMadeGUI(String selectedWeapon, String selectedCharacter, String currentRoom, int playerAmount) {
+//        // new cards
+//        Card weapon = new Card(selectedWeapon);
+//        Card character = new Card(selectedCharacter);
+//        Card room = new Card(currentRoom);
+//        System.out.println("generating suggestion.......");
+//
+//            int nextPlayer;
+//            int next = turnRanking + 1;
+//            // checks each players hand until someone shows card, or no-one has card
+//            for (int count = 0; count < playerAmount-1; count++) {
+//                if (next == playerAmount) {
+//                    next = 0;
+//                }
+//                Suggestion s = new Suggestion(character, weapon, room);
+//                Player checkPlayer = allPlayers1.get(next);
+//                if (checkPlayer.compareHandGUI(s)) { // found a card that matches
+//                    break;
+//                } else {
+//                    System.out.println(checkPlayer.getName() + " doesn't have any cards.");
+//                }
+//                next = next + 1;
+//
+//
+//
+//             }
+////            else {
+////            System.out.println("You have to be in a room to make a suggestion");
+////        }
+//    }
+    /**
      * Moves the character on the board
      *
      * @param currentboard This is the current board
@@ -693,6 +743,60 @@ class Player {
         }
         return false;
     }
+
+
+    /**
+     * Player checks hand to see if any of their cards match the suggestion
+     *
+     * @param suggestion The suggestion the player is checking to see if they have matching cards
+     * @return boolean Returns true if match is found, false if player doesn't have any matching cards
+     */
+//    public boolean compareHandGUI(Suggestion suggestion) {
+//        List<Card> cardsThatMatch = new ArrayList<Card>();
+//        Person p = (Person) suggestion.getPerson();
+//        Weapon w = (Weapon) suggestion.getWeapon();
+//        Room r = (Room) suggestion.getRoom();
+//        System.out.println(p.getName() + " + " + w.getName() + " + " + r.getName());
+//        for (Card card : handList) { // finds if the cards are in the hand
+//
+//            if (p.getName().equalsIgnoreCase(card.getName())) {
+//                cardsThatMatch.add(card);
+//            } else if (w.getName().equalsIgnoreCase(card.getName())) {
+//                cardsThatMatch.add(card);
+//            } else if (r.getName().equalsIgnoreCase(card.getName())) {
+//                cardsThatMatch.add(card);
+//            }
+//        }
+//
+//        if (cardsThatMatch.size() == 0) { // no cards match
+//            return false;
+//        } else if (cardsThatMatch.size() == 1) { // player has one matching card
+//            System.out.println(name + " has " + cardsThatMatch.get(0).getName());
+//            return true;
+//        } else { // more than one matching card
+//            String text = " choose between ";
+//            gui.selectCard(cardsThatMatch);
+//
+//            for (Card card : cardsThatMatch) {
+//                text += (card.getName() + ", ");
+//            }
+//            System.out.println(getName() + text);
+//
+//            boolean i = false;
+//
+//            while (!i) { // will loop until they enter a real answer
+//                System.out.println("Which card do you want to reveal?");
+//                String answer = sc.next();
+//                if (answer.equalsIgnoreCase(p.getName()) || answer.equalsIgnoreCase(w.getName()) || answer.equalsIgnoreCase(r.getName())) {
+//                    System.out.println(name + " revealed that they have " + answer);
+//                    return true;
+//                } else {
+//                    System.out.println("Incorrect card input");
+//                }
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * Compares an accusation with the winning cards

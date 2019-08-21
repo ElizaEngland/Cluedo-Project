@@ -74,6 +74,8 @@ class cluedoMain {
             allPlayers.add(playernotUsed);
         }
         Player player1 = players.get(0);
+        player1.setAllPlayers1(allPlayers);
+        player1.setGui(gui);
         gui.createMainFrame(player1);
     }
 

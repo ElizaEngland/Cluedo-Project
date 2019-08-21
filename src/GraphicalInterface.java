@@ -69,6 +69,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     String typeOfTile;
     boolean inRoom =false;
     String currentRoom;
+//    Player currentPlayer= null;
 
 
 
@@ -793,6 +794,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
             if(count==2) {
                 // send the suggestion
+                player.suggestionMadeGUI(selectedWeapon, selectedCharacter, currentRoom, playerAmount);
                 suggestionFrame.setVisible(false);
             }
 
@@ -847,6 +849,70 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
 
     }
+
+//    public void selectCard(List<Card>cardsThatMatch){
+//        JFrame frame1 = new JFrame();
+//        JPanel panel = new JPanel();
+//        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//        int count =0;
+//        for (Card c : cardsThatMatch){
+//            String name = "card"+count;
+//            JRadioButton name = new JRadioButton("3");
+//
+//        }
+//
+////        noOfPlayers.setFont(new Font("Serif", Font.PLAIN, 24));
+//        JRadioButton amount3 = new JRadioButton("3");
+//        JRadioButton amount4 = new JRadioButton("4");
+//        JRadioButton amount5 = new JRadioButton("5");
+//        JRadioButton amount6 = new JRadioButton("6");
+//
+//        panel.add(noOfPlayers);
+//        panel.add(amount3);
+//        panel.add(amount4);
+//        panel.add(amount5);
+//        panel.add(amount6);
+//        JButton confirmNoOfPlayers = new JButton("Confirm");
+//        panel.add(confirmNoOfPlayers);
+//        frame1.add(panel);
+//
+//
+////        confirmNoOfPlayers.addActionListener(this);
+//
+//        confirmNoOfPlayers.addActionListener( new ActionListener() {
+//          public void actionPerformed(ActionEvent e)
+//          {
+//
+//              frame1.setVisible(false);
+//              if (amount3.isSelected()){
+//                  playerAmount = Integer.parseInt(amount3.getText());
+//                  System.out.println("3 pressed");
+//              }
+//              if (amount4.isSelected()){
+//                  playerAmount = Integer.parseInt(amount4.getText());
+//                  System.out.println("4 pressed");
+//
+//              }
+//              if (amount5.isSelected()){
+//                  playerAmount = Integer.parseInt(amount5.getText());
+//                  System.out.println("5 pressed");
+//
+//              }
+//              if (amount6.isSelected()){
+//                  playerAmount = Integer.parseInt(amount6.getText());
+//                  System.out.println("6 pressed");
+//
+//              }
+////                      String stringNumOfPlayers = players.getText();
+//              addPlayer();
+//          }
+//      }
+//        );
+//
+//        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame1.setSize(500, 200);
+//        frame1.setVisible(true);
+//    }
 
     /**
      * checks to see if the tile move is valid
