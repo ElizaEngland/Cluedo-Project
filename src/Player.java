@@ -63,14 +63,6 @@ class Player {
         this.winningCards = winningCards;
     }
 
-    public void setGui(GraphicalInterface gui) {
-        this.gui = gui;
-    }
-
-    public void setAllPlayers1(ArrayList<Player> allPlayers1) {
-        this.allPlayers1 = allPlayers1;
-    }
-
     /**
      * Adds a card to the players hand
      *

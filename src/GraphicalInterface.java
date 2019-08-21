@@ -857,9 +857,15 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             Enumeration characterEle = characterGroup.getElements();
             Enumeration weaponEle = weaponGroup.getElements();
             Enumeration roomEle = roomGroup.getElements();
+
+            String weaponSelected = "";
+            String characterSelected = "";
+            String roomSelected = "";
+
             while(characterEle.hasMoreElements()){
                 JRadioButton button = (JRadioButton)characterEle.nextElement();
                 if (button.isSelected()){
+                    characterSelected = button.getText();
                     count++;
                     System.out.println("selected: " + button.getText());
 
@@ -869,6 +875,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             while(weaponEle.hasMoreElements()){
                 JRadioButton button = (JRadioButton)weaponEle.nextElement();
                 if (button.isSelected()){
+                    weaponSelected = button.getText();
                     count++;
                     System.out.println("selected: " + button.getText());
 
@@ -878,6 +885,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             while(roomEle.hasMoreElements()){
                 JRadioButton button = (JRadioButton)roomEle.nextElement();
                 if (button.isSelected()){
+                    roomSelected = button.getText();
                     count++;
                     System.out.println("selected: " + button.getText());
 
@@ -886,6 +894,17 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
             if(count==3) {
                 accusationFrame.setVisible(false);
+
+                String winningRoom = player.winningCards.get(0).getName();
+                String winningPeople = player.winningCards.get(1).getName();
+                String winningWeapon = player.winningCards.get(2).getName();
+
+
+                if (winningRoom.equalsIgnoreCase(roomSelected)
+                        && winningWeapon.equalsIgnoreCase(weaponSelected)
+                                && winningPeople.equalsIgnoreCase(characterSelected)){
+                    youWin();
+                }
             }
 
         }
@@ -1009,19 +1028,33 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         return text;
     }
 
+    /**
+     * panel which comes up if you win the game
+     */
     public void youWin() {
         JFrame winFrame = new JFrame();
         JPanel winPanel = new JPanel();
         JLabel winning = new JLabel(player.getName() + " won the game!");
         JButton endGame = new JButton("Game Over");
+        endGame.addActionListener(this);
         winPanel.add(winning);
         winPanel.add(endGame);
         winFrame.add(winPanel);
-        winFrame.setSize(100, 100);
+        winFrame.setSize(300, 100);
         winFrame.setVisible(true);
+
+        endGame.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                winFrame.setVisible(false);
+            }
+        });
         winFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    /**
+     * panel which comes up if youre out
+     */
     public void youAreOut(){
         JFrame loseFrame = new JFrame();
         JPanel losePanel = new JPanel();

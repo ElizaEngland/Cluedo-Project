@@ -197,7 +197,8 @@ class cluedoMain implements ActionListener {
          //     * @param reader Scanner reads user input
          */
         public void addPlayerGUI (String name, String character,int row, int col, HashSet<
-        Card > personCards, HashSet < Card > weaponCards, HashSet < Card > roomCards, List < Card > winningCards){
+        Card > personCards1, HashSet < Card > weaponCards1, HashSet < Card > roomCards1, List < Card > winningCards1){
+
             Player p = new Player(name, character, row, col, personCards, weaponCards, roomCards, winningCards);
 
             boolean match = false;
@@ -289,6 +290,7 @@ class cluedoMain implements ActionListener {
             peoplez.remove(0);
             roomz.remove(0);
             weaponz.remove(0);
+            System.out.println(winningCards.toString());
 
         }
 
