@@ -827,5 +827,8 @@ class Player {
         return character;
     }
     
+    public boolean getInRoom(){return inRoom;}
+    public void setInRoom(boolean t){inRoom=t;}
+    
 
 }
