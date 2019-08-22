@@ -513,7 +513,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
      */
     public void addTile(){
         try {
-            FileReader fr = new FileReader("boardmapGUI.txt");
+            FileReader fr = new FileReader("src/boardmapGUI.txt");
             BufferedReader dataReader = new BufferedReader(fr);
             tiles = new ArrayList<Tile>();
             String currentLine;
