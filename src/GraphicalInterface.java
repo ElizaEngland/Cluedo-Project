@@ -824,6 +824,8 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         if(e.getSource() == confirmSuggestion){
             int count=0;
+            String p =null;
+            String w = null;
 
             Enumeration characterEle = characterGroup.getElements();
             Enumeration weaponEle = weaponGroup.getElements();
@@ -832,6 +834,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 if (button.isSelected()){
                     count++;
                     System.out.println("selected: " + button.getText());
+                    p = button.getText();
 
                 }
             }
@@ -841,12 +844,14 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 if (button.isSelected()){
                     count++;
                     System.out.println("selected: " + button.getText());
-
+                    w = button.getText();
                 }
             }
 
             if(count==2) {
+
                 suggestionFrame.setVisible(false);
+                compareSuggestion(p,w,currentRoom);
             }
 
         }
@@ -1067,6 +1072,234 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         loseFrame.setVisible(true);
         loseFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+    
+    /**
+     * Checks suggestion against all other players cards
+     * @param p
+     * @param w
+     * @param r
+     */
+    public void compareSuggestion(String p, String w, String r){
+        boolean found = false;
+        int next = cluedoMainGame.players.indexOf(player) + 1;
+        for (int count = 0; count < cluedoMainGame.allPlayers.size() - 1; count++) {
+            if (next ==  cluedoMainGame.allPlayers.size()) {
+                next = 0;
+            }
+
+            Player checkPlayer = cluedoMainGame.allPlayers.get(next);
+            if (checkHand(checkPlayer, p, w, r)) { // found a card that matches
+                found=true;
+                break;
+            }
+            next = next + 1;
+        }
+        if(!found){
+            JFrame noCardsFoundFrame = new JFrame();
+            JPanel pnl = new JPanel();
+            JLabel noneFound = new JLabel("No cards found");
+            pnl.add(noneFound);
+            noCardsFoundFrame.add(pnl);
+            noCardsFoundFrame.setVisible(true);
+            noCardsFoundFrame.setSize(100,100);
+        }
+    }
+    
+    /**
+     * Checks players hand to see if they have any matching cards
+     * @param plr player whos hand you are checking
+     * @param p person
+     * @param w weapon
+     * @param r room
+     * @return
+     */
+    public boolean checkHand(Player plr,String p, String w, String r){
+
+        JFrame show = new JFrame();
+        JPanel panels = new JPanel();
+
+        List<Card> list  = plr.handList;
+        List<Card> cardsThatMatch = new ArrayList<Card>();
+
+        for (Card card : list) { // finds if the cards are in the hand
+            if (card.getName().equalsIgnoreCase(p)) {
+                cardsThatMatch.add(card);
+
+            } else if (card.getName().equalsIgnoreCase(w)) {
+                cardsThatMatch.add(card);
+            } else if (card.getName().equalsIgnoreCase(r)) {
+                cardsThatMatch.add(card);
+            }
+        }
+
+        if (cardsThatMatch.size() == 0) { // no cards match
+            return false;
+        } else if (cardsThatMatch.size() == 1) { // player has one matching card
+
+            JLabel playersNameLabel = new JLabel(plr.getName() +" has:");
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(new File("images/" + cardsThatMatch.get(0).getName() +".jpg"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Image imgs = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(imgs);
+
+            panels.add(playersNameLabel);
+            panels.add(new JLabel(imageIcon));
+            show.add(panels);
+            show.setVisible(true);
+            show.setSize(200,250);
+            return true;
+
+        }
+        else if(cardsThatMatch.size() == 2){
+            JLabel playersNameLabel = new JLabel(plr.getName() +" choose either: ");
+            panels.add(playersNameLabel);
+
+            JRadioButton n1 = new JRadioButton(cardsThatMatch.get(0).getName());
+            JRadioButton n2 = new JRadioButton(cardsThatMatch.get(1).getName());
+            JButton confirmSelection = new JButton("Confirm");
+            confirmSelection.addActionListener( new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+
+                  show.setVisible(false);
+                  if(n1.isSelected()){
+                      JFrame newFrame = new JFrame();
+                      JPanel p1 = new JPanel();
+                      JLabel playersNameLabel = new JLabel(plr.getName() +" has:");
+                      BufferedImage img = null;
+                      try {
+                          img = ImageIO.read(new File("images/" + cardsThatMatch.get(0).getName() +".jpg"));
+                      } catch (IOException ei) {
+                          ei.printStackTrace();
+                      }
+                      Image imgs = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
+                      ImageIcon imageIcon = new ImageIcon(imgs);
+
+                      p1.add(playersNameLabel);
+                      p1.add(new JLabel(imageIcon));
+                      newFrame.add(p1);
+                      newFrame.setVisible(true);
+                      newFrame.setSize(200,250);
+                  }
+
+                  if(n2.isSelected()){
+                      JFrame newFrame = new JFrame();
+                      JPanel p1 = new JPanel();
+                      JLabel playersNameLabel = new JLabel(plr.getName() +" has:");
+                      BufferedImage img = null;
+                      try {
+                          img = ImageIO.read(new File("images/" + cardsThatMatch.get(1).getName() +".jpg"));
+                      } catch (IOException ei) {
+                          ei.printStackTrace();
+                      }
+                      Image imgs = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
+                      ImageIcon imageIcon = new ImageIcon(imgs);
+
+                      p1.add(playersNameLabel);
+                      p1.add(new JLabel(imageIcon));
+                      newFrame.add(p1);
+                      newFrame.setVisible(true);
+                      newFrame.setSize(200,250);
+                  }
+              }
+            });
+
+            panels.add(n1);
+            panels.add(n2);
+            panels.add(confirmSelection);
+
+            show.add(panels);
+            show.setVisible(true);
+            show.setSize(400,100);
+            return true;
+        }
+        else { // 3 matching cards
+            JLabel playersNameLabel = new JLabel(plr.getName() +" choose either: ");
+            panels.add(playersNameLabel);
+            JRadioButton n1 = new JRadioButton(cardsThatMatch.get(0).getName());
+            JRadioButton n2 = new JRadioButton(cardsThatMatch.get(1).getName());
+            JRadioButton n3 = new JRadioButton(cardsThatMatch.get(2).getName());
+            JButton confirmSelection = new JButton("Confirm");
+            confirmSelection.addActionListener( new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    show.setVisible(false);
+                    if(n1.isSelected()){
+                        JFrame newFrame = new JFrame();
+                        JPanel p1 = new JPanel();
+                        JLabel playersNameLabel = new JLabel(plr.getName() +" has:");
+                        BufferedImage img = null;
+                        try {
+                            img = ImageIO.read(new File("images/" + cardsThatMatch.get(0).getName() +".jpg"));
+                        } catch (IOException ei) {
+                            ei.printStackTrace();
+                        }
+                        Image imgs = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
+                        ImageIcon imageIcon = new ImageIcon(imgs);
+
+                        p1.add(playersNameLabel);
+                        p1.add(new JLabel(imageIcon));
+                        newFrame.add(p1);
+                        newFrame.setVisible(true);
+                        newFrame.setSize(200,250);
+                    }
+
+                    if(n2.isSelected()){
+                        JFrame newFrame = new JFrame();
+                        JPanel p1 = new JPanel();
+                        JLabel playersNameLabel = new JLabel(plr.getName() +" has:");
+                        BufferedImage img = null;
+                        try {
+                            img = ImageIO.read(new File("images/" + cardsThatMatch.get(1).getName() +".jpg"));
+                        } catch (IOException ei) {
+                            ei.printStackTrace();
+                        }
+                        Image imgs = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
+                        ImageIcon imageIcon = new ImageIcon(imgs);
+
+                        p1.add(playersNameLabel);
+                        p1.add(new JLabel(imageIcon));
+                        newFrame.add(p1);
+                        newFrame.setVisible(true);
+                        newFrame.setSize(200,250);
+                    }
+                    if(n3.isSelected()){
+                        JFrame newFrame = new JFrame();
+                        JPanel p1 = new JPanel();
+                        JLabel playersNameLabel = new JLabel(plr.getName() +" has:");
+                        BufferedImage img = null;
+                        try {
+                            img = ImageIO.read(new File("images/" + cardsThatMatch.get(2).getName() +".jpg"));
+                        } catch (IOException ei) {
+                            ei.printStackTrace();
+                        }
+                        Image imgs = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
+                        ImageIcon imageIcon = new ImageIcon(imgs);
+
+                        p1.add(playersNameLabel);
+                        p1.add(new JLabel(imageIcon));
+                        newFrame.add(p1);
+                        newFrame.setVisible(true);
+                        newFrame.setSize(200,250);
+                    }
+                }
+            });
+
+            panels.add(n1);
+            panels.add(n2);
+            panels.add(n3);
+            panels.add(confirmSelection);
+
+            show.add(panels);
+            show.setVisible(true);
+            show.setSize(500,100);
+            return true;
+        }
+    }
+
+
 
 }
 
