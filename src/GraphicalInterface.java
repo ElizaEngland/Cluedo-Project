@@ -73,6 +73,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     String currentRoom;
     boolean playersTurn;
     boolean turnOver;
+    List<Player> temporaryPlayer = new ArrayList<Player>();
 
     boolean seeRoll =true;
     boolean seeSuggestion =true;
@@ -202,7 +203,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         // column
         createPanelOne();
-
 
         // bottom
         p2= new JPanel();
@@ -415,7 +415,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 
 
-        JLabel l = new JLabel("Make A Suggestion");
+        JLabel l = new JLabel("Make An Accusation");
         p.add(l);
         JLabel per = new JLabel("Choose a person:");
         p.add(per);
@@ -883,7 +883,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         if(e.getSource() == confirmAccusation){
             int count=0;
-            System.out.println("Here we compare hands");
+
             Enumeration characterEle = characterGroup.getElements();
             Enumeration weaponEle = weaponGroup.getElements();
             Enumeration roomEle = roomGroup.getElements();
@@ -928,12 +928,15 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 String winningRoom = player.winningCards.get(0).getName();
                 String winningPeople = player.winningCards.get(1).getName();
                 String winningWeapon = player.winningCards.get(2).getName();
-
-
                 if (winningRoom.equalsIgnoreCase(roomSelected)
                         && winningWeapon.equalsIgnoreCase(weaponSelected)
                         && winningPeople.equalsIgnoreCase(characterSelected)){
                     youWin();
+                }
+                else{
+                    youAreOut();
+                    cluedoMainGame.players.remove(player);
+
                 }
             }
 
@@ -941,17 +944,17 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         if(e.getSource() == nextTurn){
             int index=0;
-            for(Player p : cluedoMainGame.players){
+            for(int i =0; i < cluedoMainGame.players.size();i++){
+                Player p= cluedoMainGame.players.get(i);
                 if(p.getName().equals(player.getName())){
                     index=cluedoMainGame.players.indexOf(p);
-                    System.out.println(index);
-
                     if(index+1>=cluedoMainGame.players.size()){
                         index=0;
                         System.out.println(index);
                     }else{index++;}
                 }
             }
+
             playerTurn(cluedoMainGame.players.get(index),true);
         }
 
@@ -1096,7 +1099,6 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         loseFrame.add(losePanel);
         loseFrame.setSize(100, 100);
         loseFrame.setVisible(true);
-        loseFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /**
@@ -1107,7 +1109,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
      */
     public void compareSuggestion(String p, String w, String r){
         boolean found = false;
-        int next = cluedoMainGame.players.indexOf(player) + 1;
+        int next = cluedoMainGame.allPlayers.indexOf(player) + 1;
         for (int count = 0; count < cluedoMainGame.allPlayers.size() - 1; count++) {
             if (next ==  cluedoMainGame.allPlayers.size()) {
                 next = 0;
@@ -1115,9 +1117,10 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
             Player checkPlayer = cluedoMainGame.allPlayers.get(next);
             if (checkHand(checkPlayer, p, w, r)) { // found a card that matches
-                found=true;
+                found = true;
                 break;
             }
+
             next = next + 1;
         }
         if(!found){
