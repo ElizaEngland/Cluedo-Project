@@ -73,7 +73,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     boolean playersTurn;
     boolean turnOver;
 
-
+    boolean seeRoll =true;
+    boolean seeSuggestion =true;
+    boolean seeAccusation =true;
 
     public GraphicalInterface(cluedoMain cluedoMainGame){
         super("Cluedo");
@@ -123,10 +125,12 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         String charac = player.getCharacter();
         playerTileName = charac.toLowerCase() + "Tile.jpg";
-
-        roll.setVisible(true);
-        suggestion.setVisible(true);
-        accusation.setVisible(true);
+        
+        seeRoll=true;
+        if(inRoom){seeSuggestion =true;}
+        else{seeSuggestion =false;}
+        seeAccusation =true;
+        
         updateMainFrame();
 
     }
@@ -166,6 +170,10 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
 
     public void createMainFrame(Player player){
+        
+        seeRoll=true;
+        seeSuggestion =true;
+        seeAccusation =true;
         this.player = player;
         mainFrame = new JFrame();
         Border blackline = BorderFactory.createLineBorder(Color.black);
@@ -386,7 +394,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         suggestionFrame.add(p);
         suggestionFrame.setSize(250, 650);
         suggestionFrame.setVisible(true);
-        suggestionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
 
     }
 
@@ -432,7 +440,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         accusationFrame.add(p);
         accusationFrame.setSize(250, 650);
         accusationFrame.setVisible(true);
-        accusationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      
     }
 
     /**
@@ -706,18 +714,23 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         playerName = new JLabel(player.getName() + " turn");
         playerName.setAlignmentX(Component.CENTER_ALIGNMENT);
         playerName.setPreferredSize(new Dimension(BOARDWIDTH/5, BOARDHEIGHT/10));
+        
+        JLabel charName = new JLabel("Playing as: "+ player.getCharacter());
+        charName.setAlignmentX(Component.CENTER_ALIGNMENT);
+        charName.setPreferredSize(new Dimension(BOARDWIDTH/5, BOARDHEIGHT/10));
 
         roll = new JButton("ROLL");
         roll.setFocusable(false);
         roll.setAlignmentX(Component.CENTER_ALIGNMENT);
+        roll.setVisible(seeRoll);
         roll.addActionListener(this);
 
         suggestion = new JButton("SUGGESTION");
         suggestion.setFocusable(false);
         suggestion.setAlignmentX(Component.CENTER_ALIGNMENT);
         suggestion.addActionListener(this);
-        if(inRoom){
-            suggestion.setVisible(true);
+       if(inRoom){
+            suggestion.setVisible(seeSuggestion);
         }else{
             suggestion.setVisible(false);
         }
@@ -725,6 +738,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         accusation = new JButton("ACCUSATION");
         accusation.setAlignmentX(Component.CENTER_ALIGNMENT);
         accusation.setFocusable(false);
+        accusation.setVisible(seeAccusation);
         accusation.addActionListener(this);
 
         nextTurn = new JButton("NEXT TURN");
@@ -733,6 +747,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         nextTurn.addActionListener(this);
 
         p1.add(playerName);
+        p1.add(charName);
         p1.add(roll);
         p1.add(suggestion);
         p1.add(accusation);
@@ -798,16 +813,17 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         if(e.getSource() == roll){
             roll();
-            roll.setVisible(false);
+            seeRoll=false;
+            seeAccusation =false;
             updateMainFrame();
             canMove = true;
         }
 
         if(e.getSource() == suggestion){
             makeSuggestion();
-            roll.setVisible(false);
-            suggestion.setVisible(false);
-            accusation.setVisible(false);
+            seeRoll=false;
+            seeSuggestion =false;
+            seeAccusation =false;
             updateMainFrame();
             turnOver =true;
 
@@ -815,9 +831,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         if(e.getSource() == accusation){
             makeAccusation();
-            roll.setVisible(false);
-            suggestion.setVisible(false);
-            accusation.setVisible(false);
+            seeRoll=false;
+            seeSuggestion =false;
+            seeAccusation =false;
             updateMainFrame();
             turnOver = true ;
         }
@@ -850,8 +866,9 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
             if(count==2) {
 
-                suggestionFrame.setVisible(false);
+               
                 compareSuggestion(p,w,currentRoom);
+                seeSuggestion=false;
             }
 
         }
@@ -898,7 +915,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             }
 
             if(count==3) {
-                accusationFrame.setVisible(false);
+                seeAccusation=false;
 
                 String winningRoom = player.winningCards.get(0).getName();
                 String winningPeople = player.winningCards.get(1).getName();
@@ -974,6 +991,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                 else{
                     if(t.isRoom() && typeOfTile.equals("door")){ // entering room through door
                         currentRoom = t.getRoomName();
+                        seeSuggestion=true;
                         inRoom=true;
                         return true;
                     }
