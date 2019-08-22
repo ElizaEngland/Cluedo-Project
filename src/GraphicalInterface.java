@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.awt.event.WindowEvent;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -144,6 +145,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         mainFrame.getContentPane().removeAll();
 
+
         p1 = new JPanel();
 
         p2 = new JPanel();
@@ -186,9 +188,15 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         JMenuBar menuBar = new JMenuBar();
         JMenu menu  = new JMenu("File");
         JMenuItem m1 = new JMenuItem("New Game");
-        JMenuItem m2 = new JMenuItem("Exit");
+        m1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource()== m1){
+                    mainFrame.setVisible(false);
+                    cluedoMain newGame = new cluedoMain();
+                }
+            }
+        });
         menu.add(m1);
-        menu.add(m2);
         menuBar.add(menu);
         mainFrame.setJMenuBar(menuBar);
 
