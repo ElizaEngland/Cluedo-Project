@@ -68,7 +68,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
     Player player;
     Tile currentTile;
     String typeOfTile;
-    boolean inRoom =false;
+    //boolean inRoom =false;
     String currentRoom;
     boolean playersTurn;
     boolean turnOver;
@@ -125,12 +125,12 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
         String charac = player.getCharacter();
         playerTileName = charac.toLowerCase() + "Tile.jpg";
-        
+
         seeRoll=true;
-        if(inRoom){seeSuggestion =true;}
+        if(player.getInRoom()){seeSuggestion =true;}
         else{seeSuggestion =false;}
         seeAccusation =true;
-        
+
         updateMainFrame();
 
     }
@@ -170,7 +170,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
 
     public void createMainFrame(Player player){
-        
+
         seeRoll=true;
         seeSuggestion =true;
         seeAccusation =true;
@@ -193,7 +193,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         mainFrame.setJMenuBar(menuBar);
 
         // column
-       createPanelOne();
+        createPanelOne();
 
 
         // bottom
@@ -256,36 +256,36 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         frame2.add(panel);
 
         confirm.addActionListener( new ActionListener() {
-           public void actionPerformed(ActionEvent e)
-           {
-               String selectedName="";
-               Enumeration elements = buttonGroup.getElements();
-               AbstractButton a=null;
-               while(elements.hasMoreElements()){
-                   JRadioButton button = (JRadioButton)elements.nextElement();
-                   if (button.isSelected()){
-                       selectedName = button.getText();
-                       System.out.println(selectedName);
-                       a = button;
-                       System.out.println("selected: " + button.getText());
+                                       public void actionPerformed(ActionEvent e)
+                                       {
+                                           String selectedName="";
+                                           Enumeration elements = buttonGroup.getElements();
+                                           AbstractButton a=null;
+                                           while(elements.hasMoreElements()){
+                                               JRadioButton button = (JRadioButton)elements.nextElement();
+                                               if (button.isSelected()){
+                                                   selectedName = button.getText();
+                                                   System.out.println(selectedName);
+                                                   a = button;
+                                                   System.out.println("selected: " + button.getText());
 
-                   }
-               }
-               buttonGroup.remove(a);
-               buttonGroup.clearSelection();
-               addPlayerCounter+=1;
-               cluedoMainGame.addPlayerGUI(enterPlayerName.getText(), selectedName, 0,0,null,null,null,null );
+                                               }
+                                           }
+                                           buttonGroup.remove(a);
+                                           buttonGroup.clearSelection();
+                                           addPlayerCounter+=1;
+                                           cluedoMainGame.addPlayerGUI(enterPlayerName.getText(), selectedName, 0,0,null,null,null,null );
 
-               if (cluedoMainGame.players.size() < playerAmount) {
-                   frame2.setVisible(false);
-                   addPlayer();
-               }
-               else{
-                   frame2.setVisible(false);
-                   cluedoMainGame.newGame();
-               }
-           }
-       }
+                                           if (cluedoMainGame.players.size() < playerAmount) {
+                                               frame2.setVisible(false);
+                                               addPlayer();
+                                           }
+                                           else{
+                                               frame2.setVisible(false);
+                                               cluedoMainGame.newGame();
+                                           }
+                                       }
+                                   }
         );
 
         frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -321,32 +321,32 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 //        confirmNoOfPlayers.addActionListener(this);
 
         confirmNoOfPlayers.addActionListener( new ActionListener() {
-              public void actionPerformed(ActionEvent e)
-              {
+                                                  public void actionPerformed(ActionEvent e)
+                                                  {
 
-                  frame1.setVisible(false);
-                  if (amount3.isSelected()){
-                      playerAmount = Integer.parseInt(amount3.getText());
-                      System.out.println("3 pressed");
-                  }
-                  if (amount4.isSelected()){
-                      playerAmount = Integer.parseInt(amount4.getText());
-                      System.out.println("4 pressed");
+                                                      frame1.setVisible(false);
+                                                      if (amount3.isSelected()){
+                                                          playerAmount = Integer.parseInt(amount3.getText());
+                                                          System.out.println("3 pressed");
+                                                      }
+                                                      if (amount4.isSelected()){
+                                                          playerAmount = Integer.parseInt(amount4.getText());
+                                                          System.out.println("4 pressed");
 
-                  }
-                  if (amount5.isSelected()){
-                      playerAmount = Integer.parseInt(amount5.getText());
-                      System.out.println("5 pressed");
+                                                      }
+                                                      if (amount5.isSelected()){
+                                                          playerAmount = Integer.parseInt(amount5.getText());
+                                                          System.out.println("5 pressed");
 
-                  }
-                  if (amount6.isSelected()){
-                      playerAmount = Integer.parseInt(amount6.getText());
-                      System.out.println("6 pressed");
+                                                      }
+                                                      if (amount6.isSelected()){
+                                                          playerAmount = Integer.parseInt(amount6.getText());
+                                                          System.out.println("6 pressed");
 
-                  }
-                  addPlayer();
-              }
-          }
+                                                      }
+                                                      addPlayer();
+                                                  }
+                                              }
         );
 
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -394,7 +394,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         suggestionFrame.add(p);
         suggestionFrame.setSize(250, 650);
         suggestionFrame.setVisible(true);
-    
+
 
     }
 
@@ -440,7 +440,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         accusationFrame.add(p);
         accusationFrame.setSize(250, 650);
         accusationFrame.setVisible(true);
-      
+
     }
 
     /**
@@ -505,7 +505,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
      */
     public void addTile(){
         try {
-            FileReader fr = new FileReader("src/boardmapGUI.txt");
+            FileReader fr = new FileReader("boardmapGUI.txt");
             BufferedReader dataReader = new BufferedReader(fr);
             tiles = new ArrayList<Tile>();
             String currentLine;
@@ -714,7 +714,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         playerName = new JLabel(player.getName() + " turn");
         playerName.setAlignmentX(Component.CENTER_ALIGNMENT);
         playerName.setPreferredSize(new Dimension(BOARDWIDTH/5, BOARDHEIGHT/10));
-        
+
         JLabel charName = new JLabel("Playing as: "+ player.getCharacter());
         charName.setAlignmentX(Component.CENTER_ALIGNMENT);
         charName.setPreferredSize(new Dimension(BOARDWIDTH/5, BOARDHEIGHT/10));
@@ -729,7 +729,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         suggestion.setFocusable(false);
         suggestion.setAlignmentX(Component.CENTER_ALIGNMENT);
         suggestion.addActionListener(this);
-       if(inRoom){
+        if(player.getInRoom()){
             suggestion.setVisible(seeSuggestion);
         }else{
             suggestion.setVisible(false);
@@ -866,7 +866,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
             if(count==2) {
 
-               
+
                 compareSuggestion(p,w,currentRoom);
                 seeSuggestion=false;
             }
@@ -924,7 +924,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
 
                 if (winningRoom.equalsIgnoreCase(roomSelected)
                         && winningWeapon.equalsIgnoreCase(weaponSelected)
-                                && winningPeople.equalsIgnoreCase(characterSelected)){
+                        && winningPeople.equalsIgnoreCase(characterSelected)){
                     youWin();
                 }
             }
@@ -961,10 +961,10 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         for(Tile t : tiles){
             if(y == t.getX() && x == t.getY()){
 
-                if(inRoom){
+                if(player.getInRoom()){
                     if(t.isDoor()){
                         currentRoom = t.getRoomName();
-                        inRoom = false;
+                        player.setInRoom(false);
                         typeOfTile = "exit door";
                         return true;
                     }
@@ -992,7 +992,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
                     if(t.isRoom() && typeOfTile.equals("door")){ // entering room through door
                         currentRoom = t.getRoomName();
                         seeSuggestion=true;
-                        inRoom=true;
+                        player.setInRoom(true);
                         return true;
                     }
 
@@ -1090,7 +1090,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
         loseFrame.setVisible(true);
         loseFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
+
     /**
      * Checks suggestion against all other players cards
      * @param p
@@ -1122,7 +1122,7 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             noCardsFoundFrame.setSize(100,100);
         }
     }
-    
+
     /**
      * Checks players hand to see if they have any matching cards
      * @param plr player whos hand you are checking
@@ -1180,49 +1180,49 @@ public class GraphicalInterface extends JFrame implements KeyListener, ActionLis
             JRadioButton n2 = new JRadioButton(cardsThatMatch.get(1).getName());
             JButton confirmSelection = new JButton("Confirm");
             confirmSelection.addActionListener( new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
+                public void actionPerformed(ActionEvent e) {
 
-                  show.setVisible(false);
-                  if(n1.isSelected()){
-                      JFrame newFrame = new JFrame();
-                      JPanel p1 = new JPanel();
-                      JLabel playersNameLabel = new JLabel(plr.getName() +" has:");
-                      BufferedImage img = null;
-                      try {
-                          img = ImageIO.read(new File("images/" + cardsThatMatch.get(0).getName() +".jpg"));
-                      } catch (IOException ei) {
-                          ei.printStackTrace();
-                      }
-                      Image imgs = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
-                      ImageIcon imageIcon = new ImageIcon(imgs);
+                    show.setVisible(false);
+                    if(n1.isSelected()){
+                        JFrame newFrame = new JFrame();
+                        JPanel p1 = new JPanel();
+                        JLabel playersNameLabel = new JLabel(plr.getName() +" has:");
+                        BufferedImage img = null;
+                        try {
+                            img = ImageIO.read(new File("images/" + cardsThatMatch.get(0).getName() +".jpg"));
+                        } catch (IOException ei) {
+                            ei.printStackTrace();
+                        }
+                        Image imgs = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
+                        ImageIcon imageIcon = new ImageIcon(imgs);
 
-                      p1.add(playersNameLabel);
-                      p1.add(new JLabel(imageIcon));
-                      newFrame.add(p1);
-                      newFrame.setVisible(true);
-                      newFrame.setSize(200,250);
-                  }
+                        p1.add(playersNameLabel);
+                        p1.add(new JLabel(imageIcon));
+                        newFrame.add(p1);
+                        newFrame.setVisible(true);
+                        newFrame.setSize(200,250);
+                    }
 
-                  if(n2.isSelected()){
-                      JFrame newFrame = new JFrame();
-                      JPanel p1 = new JPanel();
-                      JLabel playersNameLabel = new JLabel(plr.getName() +" has:");
-                      BufferedImage img = null;
-                      try {
-                          img = ImageIO.read(new File("images/" + cardsThatMatch.get(1).getName() +".jpg"));
-                      } catch (IOException ei) {
-                          ei.printStackTrace();
-                      }
-                      Image imgs = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
-                      ImageIcon imageIcon = new ImageIcon(imgs);
+                    if(n2.isSelected()){
+                        JFrame newFrame = new JFrame();
+                        JPanel p1 = new JPanel();
+                        JLabel playersNameLabel = new JLabel(plr.getName() +" has:");
+                        BufferedImage img = null;
+                        try {
+                            img = ImageIO.read(new File("images/" + cardsThatMatch.get(1).getName() +".jpg"));
+                        } catch (IOException ei) {
+                            ei.printStackTrace();
+                        }
+                        Image imgs = img.getScaledInstance(BOARDWIDTH/10, BOARDHEIGHT/6, Image.SCALE_SMOOTH);
+                        ImageIcon imageIcon = new ImageIcon(imgs);
 
-                      p1.add(playersNameLabel);
-                      p1.add(new JLabel(imageIcon));
-                      newFrame.add(p1);
-                      newFrame.setVisible(true);
-                      newFrame.setSize(200,250);
-                  }
-              }
+                        p1.add(playersNameLabel);
+                        p1.add(new JLabel(imageIcon));
+                        newFrame.add(p1);
+                        newFrame.setVisible(true);
+                        newFrame.setSize(200,250);
+                    }
+                }
             });
 
             panels.add(n1);
